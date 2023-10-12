@@ -1,0 +1,50 @@
+"use client";
+
+import { useCallback } from "react";
+
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+
+interface AvatarProps {
+  userId: string;
+  isLarge?: boolean;
+  hasBorder?: boolean;
+}
+
+export const Avatar: React.FC<AvatarProps> = ({
+  userId,
+  isLarge,
+  hasBorder,
+}) => {
+  const router = useRouter();
+
+  const onClick = useCallback(
+    (e: any) => {
+      e.stopPropagation();
+
+      const url = `/users/${userId}`;
+
+      router.push(url);
+    },
+    [router, userId]
+  );
+
+  return (
+    <div
+      className={`${
+        hasBorder ? "border-4 border-white dark:border-[#020817]" : ""
+      }
+  ${
+    isLarge ? "h-32 w-32" : "h-10 w-10"
+  } rounded-full hover:opacity-90 transition cursor-pointer relative`}
+    >
+      <Image
+        fill
+        style={{ objectFit: "cover", borderRadius: "100%" }}
+        onClick={onClick}
+        src={"/images/placeholder.png"}
+        alt="user avatar"
+      />
+    </div>
+  );
+};
