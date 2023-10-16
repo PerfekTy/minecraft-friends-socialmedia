@@ -12,6 +12,9 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useState } from "react";
 
 const formSchema = z.object({
   username: z.string().min(1, {
@@ -20,8 +23,8 @@ const formSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
-  email: z.string().min(2, {
-    message: "Email must be at least 2 characters and must contain @ sign.",
+  email: z.string().email({
+    message: "Email must contain something before and after @ sign.",
   }),
   password: z.string().min(5, {
     message: "Password must be at least 5 characters.",
@@ -29,6 +32,7 @@ const formSchema = z.object({
 });
 
 function SignInForm() {
+  const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -39,8 +43,16 @@ function SignInForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      setLoading(true);
+      await axios.post("http://localhost:8080/users/add", values);
+      toast.success("Account created successfully!");
+    } catch (err) {
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -57,6 +69,7 @@ function SignInForm() {
                   placeholder="Username..."
                   {...field}
                   className="p-3 h-10 text-black"
+                  disabled={loading}
                 />
               </FormControl>
               <FormMessage className="text-error font-semibold" />
@@ -74,6 +87,7 @@ function SignInForm() {
                   placeholder="Name..."
                   {...field}
                   className="p-3 h-10 text-black"
+                  disabled={loading}
                 />
               </FormControl>
               <FormMessage className="text-error font-semibold" />
@@ -91,6 +105,7 @@ function SignInForm() {
                   placeholder="E-mail..."
                   {...field}
                   className="p-3 h-10 text-black"
+                  disabled={loading}
                 />
               </FormControl>
               <FormMessage className="text-error font-semibold" />
@@ -108,13 +123,18 @@ function SignInForm() {
                   placeholder="Password..."
                   {...field}
                   className="p-3 h-10 text-black"
+                  disabled={loading}
                 />
               </FormControl>
               <FormMessage className="text-error font-semibold" />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full font-semibold text-[15px] mt-5">
+        <Button
+          type="submit"
+          className="w-full font-semibold text-[15px] mt-5"
+          disabled={loading}
+        >
           Submit
         </Button>
       </form>

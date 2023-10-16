@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
+@CrossOrigin
 public class UserController {
     @Autowired
     private UserService userService;
@@ -16,7 +17,7 @@ public class UserController {
     @PostMapping("/add")
     public String add(@RequestBody User user) {
         userService.saveUser(user);
-        return "New user has been added";
+        return "User has been added";
     }
 
     @GetMapping("/getAll")

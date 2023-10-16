@@ -1,29 +1,29 @@
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import DefaultLayout from "../components/DefaultLayout.tsx";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Auth from "../components/AuthLayout.tsx";
-
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const router = createBrowserRouter([
-      // {
-      //   path: '/',
-      //   element: <DefaultLayout/>,
-      //     children: [
-      //         {
-      //
-      //         }
-      //     ]
-      // },
-      {
-          path: '/',
-          element: <Auth/>,
-      }
-  ])
+    // {
+    //   path: '/',
+    //   element: <DefaultLayout/>,
+    //     children: [
+    //         {
+    //
+    //         }
+    //     ]
+    // },
+    {
+      path: "/",
+      element: <Auth />,
+    },
+  ]);
   return (
     <>
+      <Toaster />
       <RouterProvider router={router}></RouterProvider>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

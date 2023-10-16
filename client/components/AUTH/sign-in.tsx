@@ -14,6 +14,9 @@ import { Input } from "../ui/input";
 import { useForm } from "react-hook-form";
 import { ModeToggle } from "../ui/theme-switcher.tsx";
 import SignUp from "../MODALS/Sign-up.tsx";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 const formSchema = z.object({
   username: z.string().min(1, {
@@ -25,6 +28,7 @@ const formSchema = z.object({
 });
 
 function SignIn() {
+  const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -33,8 +37,16 @@ function SignIn() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      setLoading(true);
+      await axios.post("http://localhost:8080/login", values);
+      toast.success("Successfully logged in!");
+    } catch (err) {
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -47,7 +59,12 @@ function SignIn() {
             <FormItem>
               <FormLabel className="text-lg">Login</FormLabel>
               <FormControl>
-                <Input placeholder="Login..." {...field} className="p-3 h-10" />
+                <Input
+                  placeholder="Login..."
+                  {...field}
+                  className="p-3 h-10"
+                  disabled={loading}
+                />
               </FormControl>
               <FormMessage className="text-error font-semibold" />
             </FormItem>
@@ -64,20 +81,25 @@ function SignIn() {
                   placeholder="Password..."
                   {...field}
                   className="p-3 h-10"
+                  disabled={loading}
                 />
               </FormControl>
               <FormMessage className="text-error font-semibold" />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full font-semibold text-[15px]">
+        <Button
+          type="submit"
+          className="w-full font-semibold text-[15px]"
+          disabled={loading}
+        >
           Submit
         </Button>
-        <div className="flex items-center justify-between">
-          <SignUp />
-          <ModeToggle />
-        </div>
       </form>
+      <div className="flex items-center justify-between my-5">
+        <SignUp />
+        <ModeToggle />
+      </div>
     </Form>
   );
 }
