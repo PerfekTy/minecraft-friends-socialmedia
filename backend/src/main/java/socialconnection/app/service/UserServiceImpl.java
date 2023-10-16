@@ -1,7 +1,7 @@
-package com.example.demo.service;
+package socialconnection.app.service;
 
-import com.example.demo.model.User;
-import com.example.demo.repository.UserRepo;
+import socialconnection.app.model.User;
+import socialconnection.app.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,6 +26,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAllUsers() {
         return userRepo.findAll();
+    }
+
+    public User getUserById(Long userId) {
+        return userRepo.findById(userId).orElse(null);
     }
 
 }
