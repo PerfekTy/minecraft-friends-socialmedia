@@ -1,7 +1,8 @@
-package com.example.demo.controller;
+package socialconnection.app.controller;
 
-import com.example.demo.model.User;
-import com.example.demo.service.UserService;
+import org.springframework.http.ResponseEntity;
+import socialconnection.app.model.User;
+import socialconnection.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,5 +24,15 @@ public class UserController {
     @GetMapping("/getAll")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> getUserById(@PathVariable Long userId) {
+        User user = userService.getUserById(userId);
+        if(user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
