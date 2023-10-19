@@ -1,6 +1,6 @@
-package socialconnection.app.service;
+package minecraft_friends.app.service;
 
-import socialconnection.app.model.User;
+import minecraft_friends.app.model.User;
 
 import java.util.List;
 

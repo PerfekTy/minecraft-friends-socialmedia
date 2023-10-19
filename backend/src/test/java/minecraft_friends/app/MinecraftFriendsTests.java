@@ -1,10 +1,10 @@
-package socialconnection.app;
+package minecraft_friends.app;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SocialConnectionTests {
+class MinecraftFriendsTests {
 
 	@Test
 	void contextLoads() {
