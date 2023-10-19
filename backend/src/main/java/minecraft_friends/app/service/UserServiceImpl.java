@@ -1,7 +1,7 @@
-package socialconnection.app.service;
+package minecraft_friends.app.service;
 
-import socialconnection.app.model.User;
-import socialconnection.app.repository.UserRepo;
+import minecraft_friends.app.model.User;
+import minecraft_friends.app.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

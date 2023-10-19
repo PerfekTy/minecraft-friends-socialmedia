@@ -1,8 +1,8 @@
-package socialconnection.app.controller;
+package minecraft_friends.app.controller;
 
+import minecraft_friends.app.model.User;
 import org.springframework.http.ResponseEntity;
-import socialconnection.app.model.User;
-import socialconnection.app.service.UserService;
+import minecraft_friends.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,13 +15,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/add")
+    @PostMapping("/new")
     public String add(@RequestBody User user) {
         userService.saveUser(user);
         return "User has been added";
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/all")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }

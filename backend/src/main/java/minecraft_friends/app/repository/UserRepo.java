@@ -1,6 +1,6 @@
-package socialconnection.app.repository;
+package minecraft_friends.app.repository;
 
-import socialconnection.app.model.User;
+import minecraft_friends.app.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
