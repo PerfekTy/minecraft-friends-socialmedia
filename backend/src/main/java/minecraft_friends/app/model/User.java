@@ -1,14 +1,20 @@
 package minecraft_friends.app.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
 @Entity
+@Table(name = "users")
+@Data
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
     private String username;
     private String name;
@@ -16,48 +22,30 @@ public class User {
     private String profileImg;
     private String password;
 
-    public String getProfileImg() {
-        return profileImg;
-    }
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+    )
+    private List<Role> roles = new ArrayList<>();
 
     public void setProfileImg(String profileImg) {
         this.profileImg = profileImg;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public void setPassword(String password) {
