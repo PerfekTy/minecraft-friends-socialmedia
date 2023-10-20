@@ -1,35 +1,40 @@
 package minecraft_friends.app.service;
 
-import minecraft_friends.app.model.User;
+import minecraft_friends.app.model.Role;
 import minecraft_friends.app.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements UserService {
-    private final UserRepo userRepo;
-    private final PasswordEncoder passwordEncoder;
+public class UserServiceImpl implements UserDetailsService {
+    private UserRepo userRepo;
+
     @Autowired
-    public UserServiceImpl(UserRepo userRepo, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepo userRepo) {
         this.userRepo = userRepo;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public User saveUser(User user) {
-        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
-        return userRepo.save(user);
-    }
-    @Override
-    public List<User> getAllUsers() {
-        return userRepo.findAll();
-    }
-
-    public User getUserById(Long userId) {
-        return userRepo.findById(userId).orElse(null);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        minecraft_friends.app.model.User user = userRepo.findByUsername(username).orElse(null);
+        if (user == null) {
+            throw new UsernameNotFoundException("Username not found");
+        }
+        
+        return new User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
     }
 
+    private Collection<GrantedAuthority> mapRolesToAuthorities(List<Role> roles) {
+        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+    }
 }
