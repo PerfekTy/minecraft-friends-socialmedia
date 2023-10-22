@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import Cookies from "js-cookie";
 
 import { Button } from "../ui/button";
 import {
@@ -13,10 +14,11 @@ import {
 import { Input } from "../ui/input";
 import { useForm } from "react-hook-form";
 import { ModeToggle } from "../ui/theme-switcher.tsx";
-import SignUp from "../MODALS/Sign-up.tsx";
+import SignUpModal from "../MODALS/sign-up-modal.tsx";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
   username: z.string().min(1, {
@@ -28,6 +30,7 @@ const formSchema = z.object({
 });
 
 function SignIn() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -40,10 +43,15 @@ function SignIn() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setLoading(true);
-      await axios.post("http://localhost:8080/login", values);
+      const res = await axios.post(
+        "http://localhost:8080/api/auth/login",
+        values,
+      );
+      Cookies.set("token", res.data.accessToken);
       toast.success("Successfully logged in!");
-    } catch (err) {
-      toast.error("Something went wrong");
+      navigate("/");
+    } catch ({ response }) {
+      toast.error(response.data);
     } finally {
       setLoading(false);
     }
@@ -80,6 +88,7 @@ function SignIn() {
                 <Input
                   placeholder="Password..."
                   {...field}
+                  type="password"
                   className="p-3 h-10"
                   disabled={loading}
                 />
@@ -97,7 +106,7 @@ function SignIn() {
         </Button>
       </form>
       <div className="flex items-center justify-between my-5">
-        <SignUp />
+        <SignUpModal />
         <ModeToggle />
       </div>
     </Form>

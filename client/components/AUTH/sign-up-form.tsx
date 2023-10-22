@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import Cookies from "js-cookie";
 
 import { Button } from "../ui/button";
 import {
@@ -15,6 +16,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
   username: z.string().min(1, {
@@ -32,6 +34,7 @@ const formSchema = z.object({
 });
 
 function SignInForm() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,10 +49,16 @@ function SignInForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setLoading(true);
-      await axios.post("http://localhost:8080/users/add", values);
+      const res = await axios.post(
+        "http://localhost:8080/api/auth/register",
+        values,
+      );
       toast.success("Account created successfully!");
-    } catch (err) {
-      toast.error("Something went wrong");
+
+      Cookies.set("token", res.data.accessToken);
+      navigate("/");
+    } catch ({ response }) {
+      toast.error(response.data);
     } finally {
       setLoading(false);
     }
@@ -68,7 +77,7 @@ function SignInForm() {
                 <Input
                   placeholder="Username..."
                   {...field}
-                  className="p-3 h-10 text-black"
+                  className="p-3 h-10 placeholder:text-black border border-craft text-black"
                   disabled={loading}
                 />
               </FormControl>
@@ -86,7 +95,7 @@ function SignInForm() {
                 <Input
                   placeholder="Name..."
                   {...field}
-                  className="p-3 h-10 text-black"
+                  className="p-3 h-10 placeholder:text-black border border-craft text-black"
                   disabled={loading}
                 />
               </FormControl>
@@ -104,7 +113,7 @@ function SignInForm() {
                 <Input
                   placeholder="E-mail..."
                   {...field}
-                  className="p-3 h-10 text-black"
+                  className="p-3 h-10 placeholder:text-black border border-craft text-black"
                   disabled={loading}
                 />
               </FormControl>
@@ -122,21 +131,24 @@ function SignInForm() {
                 <Input
                   placeholder="Password..."
                   {...field}
-                  className="p-3 h-10 text-black"
+                  className="p-3 h-10 placeholder:text-black border border-craft text-black"
                   disabled={loading}
+                  type="password"
                 />
               </FormControl>
               <FormMessage className="text-error font-semibold" />
             </FormItem>
           )}
         />
-        <Button
-          type="submit"
-          className="w-full font-semibold text-[15px] mt-5"
-          disabled={loading}
-        >
-          Submit
-        </Button>
+        <div className="flex justify-center">
+          <Button
+            type="submit"
+            className="w-1/2 font-semibold text-[15px] mt-5"
+            disabled={loading}
+          >
+            Submit
+          </Button>
+        </div>
       </form>
     </Form>
   );

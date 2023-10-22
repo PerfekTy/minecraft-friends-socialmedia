@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Playpen+Sans:wght@400;600;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -55,7 +57,48 @@
   * {
     @apply border-border;
   }
+
   body {
     background: var(--background);
+    font-family: 'Open Sans', sans-serif;
+  }
+
+  .navbar {
+    background: url("/images/blacktxt.png");
+  }
+
+  .d-layout {
+  }
+
+  .bounce {
+    animation: bounce 3s infinite linear;
+  }
+
+  .shake {
+    animation: shake 3s infinite linear;
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-3px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(3px);
   }
 }

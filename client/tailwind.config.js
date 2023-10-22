@@ -21,6 +21,8 @@ module.exports = {
         mine: "#5f382c",
         craft: "#3c5c3a",
         error: "#ba4541",
+        darkGreen: "#111111",
+        lightGreen: "#7f7f7f",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
