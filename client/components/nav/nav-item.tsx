@@ -27,7 +27,7 @@ const NavItem = ({ href, label, iconPath }: NavItemProps) => {
             : "group-hover:shake transition-transform duration-300 ease-in-out"
         }
       />
-      <p className="text-xl">{label}</p>
+      <p className="text-xl text-black dark:text-white">{label}</p>
     </NavLink>
   );
 };

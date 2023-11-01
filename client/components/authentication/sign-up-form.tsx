@@ -57,8 +57,9 @@ function SignInForm() {
 
       Cookies.set("token", res.data.accessToken);
       navigate("/");
-    } catch ({ response }) {
-      toast.error(response.data);
+    } catch (error) {
+      // @ts-ignore
+        toast.error(error?.response.data);
     } finally {
       setLoading(false);
     }

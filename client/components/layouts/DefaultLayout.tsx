@@ -12,10 +12,12 @@ const DefaultLayout = () => {
     if (!token) {
       navigate("/login");
     }
+
+    console.log(token);
   }, [navigate]);
 
   return (
-    <div className="flex bg-lightGreen dark:bg-darkGreen">
+    <div className="flex d-layout dark:d-layout-dark">
       <main className="h-screen">
         <NavbarLayout />
       </main>

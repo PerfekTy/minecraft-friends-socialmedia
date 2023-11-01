@@ -47,11 +47,12 @@ function SignIn() {
         "http://localhost:8080/api/auth/login",
         values,
       );
-      Cookies.set("token", res.data.accessToken);
+      Cookies.set("token", res.data.token);
       toast.success("Successfully logged in!");
       navigate("/");
-    } catch ({ response }) {
-      toast.error(response.data);
+    } catch (error) {
+      // @ts-ignore
+        toast.error(error?.response.data);
     } finally {
       setLoading(false);
     }

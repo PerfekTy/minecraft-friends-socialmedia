@@ -7,8 +7,8 @@ export default function NavbarLayout() {
   const [mobileMenu, setMobileMenu] = useState(false);
 
   return (
-    <nav className="flex flex-col navbar text-white">
-      <div className="flex h-screen w-[200px] justify-center border-r-[1px]">
+    <nav className="flex flex-col dark:bg-navbar dark:text-white">
+      <div className="flex h-screen w-[200px] justify-center dark:border-none border-r-[1px] border-black">
         <Hamburger setMobileMenu={setMobileMenu} />
         <MainNavbar />
       </div>

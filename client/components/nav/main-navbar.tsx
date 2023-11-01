@@ -1,8 +1,11 @@
 import NavItem from "./nav-item";
 import LogoutButton from "../ui/logout-button.tsx";
 import { ModeToggle } from "../ui/theme-switcher";
+import { useCurrentUser } from "../../hooks/useCurrentUser.ts";
 
 const MainNavbar = () => {
+  const { currentUser } = useCurrentUser();
+
   const routes = [
     {
       label: "Home",
@@ -17,9 +20,8 @@ const MainNavbar = () => {
   ];
   return (
     <nav className="flex flex-col p-5 gap-10 items-center">
-      {/* USER NICKNAME */}
       <span className="dark:text-white flex items-center gap-2 font-semibold">
-        Welcome <p className="font-normal italic">PerfekT</p>
+        Welcome <p className="font-normal italic">{currentUser?.username}</p>
       </span>
       {routes.map((route) => (
         <NavItem
