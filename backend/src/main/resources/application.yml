@@ -1,0 +1,8 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://sebastianfelenczak:sebas@minecraft-friends.whjqplx.mongodb.net/
+      database: minecraft-friends-db
+
+SECRET_KEY: hCIVhxIejAprlskK0qcmt16urUZvDDzCF6VKj1/BN4UkVTXb5ZYnnFMddE/eIh6b
+JWT_EXPIRATION: 1h
