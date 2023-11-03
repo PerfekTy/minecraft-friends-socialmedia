@@ -4,9 +4,10 @@ interface NavItemProps {
   href: string;
   label: string;
   iconPath: string;
+  onClick: () => void;
 }
 
-const NavItem = ({ href, label, iconPath }: NavItemProps) => {
+const NavItem = ({ href, label, iconPath, onClick }: NavItemProps) => {
   const location = useLocation();
   return (
     <NavLink
@@ -16,6 +17,7 @@ const NavItem = ({ href, label, iconPath }: NavItemProps) => {
           : "text-white flex group items-center gap-2"
       }
       to={href}
+      onClick={onClick}
     >
       <img
         src={iconPath}

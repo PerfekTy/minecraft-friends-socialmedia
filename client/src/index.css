@@ -54,28 +54,33 @@
 
  
 @layer base {
-  * {
-    @apply border-border;
-  }
-
   body {
     background: var(--background);
     font-family: 'Open Sans', sans-serif;
   }
 
   .navbar {
-    background: url("/images/blacktxt.png");
+    background: url("public/images/blacktxt.png");
   }
 
   .d-layout {
+    background: url("public/images/bg-wool-light.png");
+  }
+
+  .d-layout-dark {
+    background: url("public/images/bg-wool-dark.png");
   }
 
   .bounce {
-    animation: bounce 3s infinite linear;
+    animation: bounce 3s infinite ease-in-out;
   }
 
   .shake {
-    animation: shake 3s infinite linear;
+    animation: shake 3s infinite ease-in-out;
+  }
+
+  .rotate {
+    animation: rotate 1s infinite ease-in-out;
   }
 }
 
@@ -100,5 +105,14 @@
   }
   20%, 40%, 60%, 80% {
     transform: translateX(3px);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }

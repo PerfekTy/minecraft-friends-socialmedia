@@ -1,19 +1,36 @@
 import axios from "axios";
+import { useToken } from "./useToken.ts";
+import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 
-export const useCurrentUser = async () => {
-  const token = Cookies.get("token");
-  let data;
+export const useCurrentUser = () => {
+  const {
+    data: currentUser,
+    error,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["current"],
+    queryFn: async () => {
+      const { token } = useToken();
+      const { data } = await axios.get(
+        "http://localhost:8080/api/users/current",
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        },
+      );
+      return data;
+    },
+  });
 
-  if (token) {
-    try {
-      const res = await axios.get("http://localhost:8080/api/users/current");
-      data = await res.data;
-      console.log(res);
-    } catch ({ response }) {
-      console.log(response);
-    }
+  const userId = currentUser?.username;
+
+  if (isError) {
+    Cookies.remove("token");
+    window.location.reload();
   }
 
-  return { data };
+  return { currentUser, isLoading, error, isError, userId };
 };

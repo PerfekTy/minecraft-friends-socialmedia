@@ -1,20 +1,22 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
-import Cookies from "js-cookie";
 
-import NavbarLayout from "./NAVIGATION/NavbarLayout.tsx";
+import NavbarLayout from "../nav/NavbarLayout.tsx";
+import toast from "react-hot-toast";
+import { useToken } from "../../hooks/useToken.ts";
+import FollowBar from "../follow-bar/follow-bar.tsx";
 
 const DefaultLayout = () => {
   const navigate = useNavigate();
+  const params = useParams();
+  const { token } = useToken();
 
   useEffect(() => {
-    const token = Cookies.get("token");
     if (!token) {
       navigate("/login");
+      toast.error("Your session is over, sign in again!");
     }
-
-    console.log(token);
-  }, [navigate]);
+  }, [navigate, token]);
 
   return (
     <div className="flex d-layout dark:d-layout-dark">
@@ -22,6 +24,7 @@ const DefaultLayout = () => {
         <NavbarLayout />
       </main>
       <Outlet />
+      {!params.userId ? <FollowBar /> : null}
     </div>
   );
 };

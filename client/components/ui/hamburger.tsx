@@ -1,21 +1,24 @@
 import { Button } from "./button";
+import { Menu, X } from "lucide-react";
 
 interface hamburgerProps {
   setMobileMenu: (boolean: boolean) => void;
+  mobileMenu: boolean;
 }
 
-export default function Hamburger({ setMobileMenu }: hamburgerProps) {
+export default function Hamburger({
+  setMobileMenu,
+  mobileMenu,
+}: hamburgerProps) {
   return (
     <Button
       variant={"ghost"}
       onClick={() => {
-        setMobileMenu(true);
+        setMobileMenu(!mobileMenu);
       }}
-      className="flex md:hidden items-center flex-col absolute left-5"
+      className="md:hidden absolute left-2 top-5 z-20"
     >
-      <div className="bg-black dark:bg-muted-foreground w-7 h-[2px] m-[3px]"></div>
-      <div className="bg-black dark:bg-muted-foreground w-7 h-[2px] m-[3px]"></div>
-      <div className="bg-black dark:bg-muted-foreground w-7 h-[2px] m-[3px]"></div>
+      {mobileMenu ? <X /> : <Menu />}
     </Button>
   );
 }

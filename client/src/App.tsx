@@ -1,20 +1,25 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
-import DefaultLayout from "../components/DefaultLayout.tsx";
-import Auth from "../components/AuthLayout.tsx";
+import DefaultLayout from "../components/layouts/DefaultLayout.tsx";
+import Auth from "../components/layouts/AuthLayout.tsx";
 import Profile from "./pages/profile.tsx";
-import NotFound from "./pages/not-found.tsx";
+import Home from "./pages/home.tsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
       element: <DefaultLayout />,
-      errorElement: <NotFound />,
+      // errorElement: <NotFound />,
       children: [
         {
-          path: "/profile",
+          path: "/",
+          element: <Home />,
+        },
+        {
+          path: "/:userId",
           element: <Profile />,
         },
       ],
@@ -24,10 +29,15 @@ function App() {
       element: <Auth />,
     },
   ]);
+
+  const queryClient = new QueryClient();
+
   return (
     <>
       <Toaster />
-      <RouterProvider router={router}></RouterProvider>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router}></RouterProvider>
+      </QueryClientProvider>
     </>
   );
 }

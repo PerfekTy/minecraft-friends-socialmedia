@@ -23,7 +23,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     (base64: string) => {
       onChange(base64);
     },
-    [onChange]
+    [onChange],
   );
 
   const handleDrop = useCallback(
@@ -38,7 +38,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 
       reader.readAsDataURL(file);
     },
-    [handleChange]
+    [handleChange],
   );
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -52,7 +52,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     <div
       {...getRootProps({
         className:
-          "w-full p-2 text-center text-sm border-2 border-dotted rounded-md",
+          "w-full p-4 text-center text-sm border-2 border-dotted border-black dark:border-white rounded-md",
       })}
     >
       <Input {...getInputProps()} />
@@ -63,7 +63,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       ) : (
         <span className="flex flex-col items-center">
           {icon}
-          <p className="text-card-foreground">{label}</p>
+          <p className="text-card-foreground font-semibold">{label}</p>
         </span>
       )}
     </div>

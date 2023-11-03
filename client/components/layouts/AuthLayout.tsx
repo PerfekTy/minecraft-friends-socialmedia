@@ -1,18 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import Cookies from "js-cookie";
 
-import SignIn from "./AUTH/sign-in.tsx";
+import SignIn from "../authentication/sign-in.tsx";
+import { useToken } from "../../hooks/useToken.ts";
 
 const AuthLayout = () => {
   const navigate = useNavigate();
+  const { token } = useToken();
 
   useEffect(() => {
-    const token = Cookies.get("token");
     if (token) {
       navigate("/");
     }
-  }, [navigate]);
+  }, [navigate, token]);
 
   return (
     <div className="grid place-items-center h-screen relative">

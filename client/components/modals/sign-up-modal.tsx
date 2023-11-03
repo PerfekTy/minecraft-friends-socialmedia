@@ -6,7 +6,7 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
-import SignUpForm from "../AUTH/sign-up-form.tsx";
+import SignUpForm from "../authentication/sign-up-form.tsx";
 
 const SignUpModal = () => {
   return (

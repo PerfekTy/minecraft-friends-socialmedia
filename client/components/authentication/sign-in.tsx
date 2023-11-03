@@ -14,7 +14,7 @@ import {
 import { Input } from "../ui/input";
 import { useForm } from "react-hook-form";
 import { ModeToggle } from "../ui/theme-switcher.tsx";
-import SignUpModal from "../MODALS/sign-up-modal.tsx";
+import SignUpModal from "../modals/sign-up-modal.tsx";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
@@ -51,8 +51,8 @@ function SignIn() {
       toast.success("Successfully logged in!");
       navigate("/");
     } catch (error) {
-      // @ts-ignore
-        toast.error(error?.response.data);
+      console.log(error);
+      toast.error("Wrong username or password!");
     } finally {
       setLoading(false);
     }

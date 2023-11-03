@@ -55,11 +55,12 @@ function SignInForm() {
       );
       toast.success("Account created successfully!");
 
-      Cookies.set("token", res.data.accessToken);
+      Cookies.set("token", res.data.token);
       navigate("/");
     } catch (error) {
-      // @ts-ignore
-        toast.error(error?.response.data);
+      toast.error("Please change your username");
+      toast.error("User already exists!");
+      console.log(error);
     } finally {
       setLoading(false);
     }

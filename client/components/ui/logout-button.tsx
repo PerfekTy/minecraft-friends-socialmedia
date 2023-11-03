@@ -15,7 +15,7 @@ const LogoutButton = () => {
   return (
     <Button
       variant="ghost"
-      className="text-white text-xl flex items-center gap-2 p-10"
+      className="text-black dark:text-white text-xl flex items-center gap-2 p-10"
       onClick={onLogout}
     >
       <img src="/images/tnt.png" alt="tnt block" width={60} />
