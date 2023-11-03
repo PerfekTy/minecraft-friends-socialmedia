@@ -10,6 +10,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.Collections;
 
 @Service
@@ -34,6 +36,8 @@ public class AuthenticationService {
         user.setCoverImage("");
         user.setProfileImage("");
         user.setDescription("");
+        user.setFollowers(new ArrayList<>());
+        user.setOwnFollowers(0);
 
         Roles role = roleRepository.findByName("USER").get();
         user.setRole(Collections.singletonList(role));

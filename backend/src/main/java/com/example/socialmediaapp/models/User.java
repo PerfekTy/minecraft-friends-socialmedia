@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -42,6 +43,12 @@ public class User implements UserDetails {
 
     @Field("description")
     private String description;
+
+    @Field("followers")
+    private List<String> followers;
+
+    @Field("ownFollowers")
+    private Integer ownFollowers;
 
     @Field
     private List role;
@@ -79,5 +86,8 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void getFollowers(ArrayList<String> objects) {
     }
 }
