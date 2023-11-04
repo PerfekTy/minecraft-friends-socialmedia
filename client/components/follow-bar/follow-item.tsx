@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button.tsx";
-import { UserPlus2 } from "lucide-react";
+import {UserMinus2, UserPlus2} from "lucide-react";
+import {useFollow} from "../../hooks/useFollow.ts";
 
 const FollowItem = ({ user }: { user: object | null }) => {
   const navigate = useNavigate();
+  const {isFollowing, onFollow} = useFollow(user);
 
   const goToUser = (e: any) => {
     e.stopPropagation();
@@ -13,6 +15,7 @@ const FollowItem = ({ user }: { user: object | null }) => {
   const followUser = (e: any) => {
     e.stopPropagation();
     e.preventDefault();
+    onFollow()
   };
 
   return (
@@ -20,7 +23,7 @@ const FollowItem = ({ user }: { user: object | null }) => {
       className="dark:text-white bg-transparent p-4 h-fit dark:hover:bg-[#252525] hover:bg-[#d5d5d5] rounded-lg transition-all cursor-pointer"
       onClick={goToUser}
     >
-      <div className="flex gap-2 items-center">
+      <div className="flex gap-5 items-center">
         <img
           src={
             user?.profileImage ? user?.profileImage : "/images/placeholder.jpg"
@@ -33,11 +36,20 @@ const FollowItem = ({ user }: { user: object | null }) => {
           <p className="text-sm italic">@{user?.username}</p>
         </div>
         <Button
-          className="p-2 flex ml-auto gap-1 items-center font-semibold border dark:border-black hover:scale-105 transition-all"
+          className={`${isFollowing && 'bg-error hover:bg-error hover:opacity-80'} p-2 flex ml-auto gap-1 items-center font-semibold border dark:border-black hover:scale-105 transition-all`}
           onClick={followUser}
         >
-          <UserPlus2 size={18} />
-          <p>Follow</p>
+          {isFollowing ? (
+              <>
+                <UserMinus2 size={18} />
+                <p>Unfollow</p>
+              </>
+          ) : (
+              <>
+                <UserPlus2 size={18} />
+                <p>Follow</p>
+              </>
+          )}
         </Button>
       </div>
     </div>

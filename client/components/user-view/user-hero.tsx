@@ -1,7 +1,8 @@
 import { Button } from "../ui/button.tsx";
-import { UserPlus2 } from "lucide-react";
+import {UserMinus2, UserPlus2} from "lucide-react";
 import ProfileOptions from "./profile-options.tsx";
 import { useEffect, useState } from "react";
+import {useFollow} from "../../hooks/useFollow.ts";
 
 interface UserHeroProps {
   userId: string | null;
@@ -9,7 +10,8 @@ interface UserHeroProps {
 }
 
 const UserHero = ({ userId, user }: UserHeroProps) => {
-  const [isCurrentUser, setIsCurrentUser] = useState<boolean | null>(null);
+  const [isCurrentUser  , setIsCurrentUser] = useState<boolean | null>(null);
+  const {onFollow, isFollowing} = useFollow(user);
 
   useEffect(() => {
     if (userId === user?.username) {
@@ -39,17 +41,35 @@ const UserHero = ({ userId, user }: UserHeroProps) => {
       </div>
       <div className="absolute right-3 -bottom-22 hidden md:block">
         {!userId && (
-          <Button className="p-3 md:p-5 flex gap-2 items-center font-semibold">
-            <UserPlus2 size={18} />
-            <p>Follow</p>
+          <Button className={`${isFollowing && 'bg-error hover:bg-error hover:opacity-80'} p-3 md:p-5 flex gap-2 items-center font-semibold`} onClick={onFollow}>
+              {isFollowing ? (
+                  <>
+                      <UserMinus2 size={18} />
+                      <p>Unfollow</p>
+                  </>
+              ) : (
+                  <>
+                      <UserPlus2 size={18} />
+                      <p>Follow</p>
+                  </>
+              )}
           </Button>
         )}
         {isCurrentUser ? (
           <ProfileOptions user={user} />
         ) : (
-          <Button className="p-5 w-full flex gap-2 items-center font-semibold border dark:border-black">
-            <UserPlus2 size={18} />
-            <p>Follow</p>
+          <Button className={`${isFollowing && 'bg-error hover:bg-error hover:opacity-80'} p-5 w-full flex gap-2 items-center font-semibold border dark:border-black`} onClick={onFollow}>
+              {isFollowing ? (
+                  <>
+                      <UserMinus2 size={18} />
+                      <p>Unfollow</p>
+                  </>
+              ) : (
+                  <>
+                      <UserPlus2 size={18} />
+                      <p>Follow</p>
+                  </>
+              )}
           </Button>
         )}
       </div>

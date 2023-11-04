@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 
-import { useParams } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import { useToken } from "../../hooks/useToken.ts";
 import { useUsers } from "../../hooks/useUsers.ts";
 
@@ -19,10 +19,11 @@ import { useCurrentUser } from "../../hooks/useCurrentUser.ts";
 import UserHero from "../../components/user-view/user-hero.tsx";
 import { Button } from "../../components/ui/button.tsx";
 import EditModal from "../../components/modals/edit-modal.tsx";
-import { useFollow } from "../../hooks/useFollow.ts";
+import {useFollow} from "../../hooks/useFollow.ts";
 
 const Profile = () => {
   const params = useParams();
+  const navigate = useNavigate()
 
   const { currentUser, userId } = useCurrentUser();
   const { users = [] } = useUsers();
@@ -32,7 +33,7 @@ const Profile = () => {
   const [isCurrentUser, setIsCurrentUser] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { onFollow, data, isFollowing } = useFollow(user);
+  const {isFollowing, onFollow} = useFollow(user)
 
   const createdAt = useMemo(() => {
     if (!user?.id?.date) {
@@ -63,10 +64,7 @@ const Profile = () => {
           },
         );
         toast.success("Account has been deleted!");
-
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
+        navigate('/login');
       } else {
         return;
       }
@@ -90,10 +88,9 @@ const Profile = () => {
     } else {
       setIsCurrentUser(false);
     }
-  }, [users, setUser, user?.username, params.userId, userId, setIsCurrentUser]);
 
-  // TODO: FIX
-  console.log(isFollowing);
+
+  }, [users, setUser, user?.username, params.userId, userId, setIsCurrentUser]);
 
   return (
     <div className="mx-auto dark:bg-navbar bg-navbarLight bg-opacity-50 p-10 w-full md:w-fit">
@@ -128,7 +125,7 @@ const Profile = () => {
           <div className="flex items-center">
             {!isCurrentUser ? (
               <Button
-                className="p-5 w-full flex gap-2 items-center font-semibold border dark:border-black"
+                className={`${isFollowing && 'bg-error hover:bg-error hover:opacity-80'} p-5 w-full flex gap-2 items-center font-semibold border dark:border-black`}
                 onClick={onFollow}
                 disabled={isLoading}
               >
