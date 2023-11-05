@@ -48,7 +48,7 @@ public class User implements UserDetails {
     private List<String> followers;
 
     @Field("ownFollowers")
-    private Integer ownFollowers;
+    private List<String> ownFollowers;
 
     @Field
     private List role;

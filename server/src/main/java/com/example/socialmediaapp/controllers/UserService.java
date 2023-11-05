@@ -60,10 +60,10 @@ public class UserService {
                 if (userToFollow != null) {
                     if (userToFollow.getFollowers().contains(loggedInUser.getUsername())) {
                         userToFollow.getFollowers().remove(loggedInUser.getUsername());
-                        loggedInUser.setOwnFollowers(loggedInUser.getOwnFollowers() - 1);
+                        loggedInUser.getOwnFollowers().remove(userToFollow.getUsername());
                     } else {
                         userToFollow.getFollowers().add(loggedInUsername);
-                        loggedInUser.setOwnFollowers(loggedInUser.getOwnFollowers() + 1);
+                        loggedInUser.getOwnFollowers().add(userToFollow.getUsername());
                     }
 
                     userRepository.save(loggedInUser);

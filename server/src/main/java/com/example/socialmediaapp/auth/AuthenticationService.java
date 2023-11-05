@@ -37,7 +37,7 @@ public class AuthenticationService {
         user.setProfileImage("");
         user.setDescription("");
         user.setFollowers(new ArrayList<>());
-        user.setOwnFollowers(0);
+        user.setOwnFollowers(new ArrayList<>());
 
         Roles role = roleRepository.findByName("USER").get();
         user.setRole(Collections.singletonList(role));
