@@ -8,9 +8,10 @@ import { ModeToggle } from "../ui/theme-switcher.tsx";
 interface MainNavProps {
   mobileMenu: boolean;
   setMobileMenu: (mobileMenu: boolean) => void;
+  timeLeft: string
 }
 
-const MainNavbar = ({ mobileMenu, setMobileMenu }: MainNavProps) => {
+const MainNavbar = ({ mobileMenu, setMobileMenu, timeLeft}: MainNavProps) => {
   const { currentUser, userId } = useCurrentUser();
   const navRef = useRef<HTMLMenuElement>(null);
 
@@ -48,8 +49,9 @@ const MainNavbar = ({ mobileMenu, setMobileMenu }: MainNavProps) => {
       <div className="mt-auto md:flex flex-col items-center gap-5 md:mb-0">
         <LogoutButton />
       </div>
-      <div className="hidden md:block">
+      <div className="hidden md:flex flex-col items-center gap-5">
         <ModeToggle />
+        <p className="font-semibold text-sm">Session time: {timeLeft}</p>
       </div>
     </nav>
   );

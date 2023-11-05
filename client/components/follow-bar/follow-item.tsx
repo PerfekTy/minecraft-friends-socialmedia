@@ -29,7 +29,7 @@ const FollowItem = ({ user }: { user: object | null }) => {
             user?.profileImage ? user?.profileImage : "/images/placeholder.jpg"
           }
           alt=""
-          className="w-12 border border-black object-cover rounded-full hover:opacity-90"
+          className="w-12 border aspect-square border-black object-cover rounded-full hover:opacity-90"
         />
         <div>
           <p>{user?.name}</p>

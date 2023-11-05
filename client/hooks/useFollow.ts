@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import {useMemo, useState} from "react";
 import { useCurrentUser } from "./useCurrentUser";
 import { useToken } from "./useToken";
 
@@ -6,8 +6,9 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 
-export const useFollow = (user: any) => {
+export const useFollow = (user) => {
   const { currentUser } = useCurrentUser();
+  const [isLoading, setIsLoading] = useState(false)
   const { token } = useToken();
   const queryClient = useQueryClient()
 
@@ -19,6 +20,7 @@ export const useFollow = (user: any) => {
 
   const onFollow = async () => {
     try {
+      setIsLoading(true)
       await axios.patch(
           `http://localhost:8080/api/users/${user?.username}/follow`,
           {},
@@ -35,18 +37,19 @@ export const useFollow = (user: any) => {
         toast.success("Account has been followed!");
       }
       await mutateFollow();
+      setIsLoading(false)
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong");
     }
   };
 
-  const { mutate:mutateFollow, isPending } = useMutation({
+  const { mutate:mutateFollow } = useMutation({
     onSettled: ()=> {
-      queryClient.invalidateQueries(['user', user]);
+      queryClient.invalidateQueries(['user'], user);
       queryClient.invalidateQueries(['isFollowing'], isFollowing);
     }
   })
 
-  return { isFollowing, onFollow, isPending };
+  return { isFollowing, onFollow, isLoading };
 };

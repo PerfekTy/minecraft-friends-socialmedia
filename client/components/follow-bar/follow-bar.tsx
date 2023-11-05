@@ -12,7 +12,7 @@ const FollowBar = () => {
   );
 
   return (
-    <div className="rounded-lg p-2 dark:bg-navbar min-w-[300px] max:w-1/3 h-fit m-2 hidden xl:block dark:border-none border border-black border-opacity-20">
+    <div className="rounded-lg p-2 dark:bg-navbar min-w-[350px] max:w-1/3 h-fit m-2 hidden xl:block dark:border-none border border-black border-opacity-20">
       <span className="dark:text-white">
         <p className="flex items-center justify-center gap-2 my-2 text-lg">
           People you might know <ArrowDownWideNarrow size={20} />

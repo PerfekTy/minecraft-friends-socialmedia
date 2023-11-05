@@ -9,10 +9,8 @@ import { useUsers } from "../../hooks/useUsers.ts";
 import {
   Calendar,
   Trash2,
-  User,
   UserMinus2,
   UserPlus2,
-  Users,
 } from "lucide-react";
 
 import { useCurrentUser } from "../../hooks/useCurrentUser.ts";
@@ -20,6 +18,9 @@ import UserHero from "../../components/user-view/user-hero.tsx";
 import { Button } from "../../components/ui/button.tsx";
 import EditModal from "../../components/modals/edit-modal.tsx";
 import {useFollow} from "../../hooks/useFollow.ts";
+import FollowDropdown from "../../components/user-view/follow-dropdown.tsx";
+import FollowDropdownContent from "../../components/user-view/follow-dropdown-content.tsx";
+import FollowDropdownTrigger from "../../components/user-view/follow-dropdown-trigger.tsx";
 
 const Profile = () => {
   const params = useParams();
@@ -33,7 +34,7 @@ const Profile = () => {
   const [isCurrentUser, setIsCurrentUser] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const {isFollowing, onFollow} = useFollow(user)
+  const {isFollowing, onFollow, isLoading:followLoading} = useFollow(user)
 
   const createdAt = useMemo(() => {
     if (!user?.id?.date) {
@@ -106,28 +107,34 @@ const Profile = () => {
       </span>
 
       <div className="text-white md:mt-20 mt-12 flex md:flex-row flex-col gap-5 md:justify-evenly">
-        <span className="flex items-center justify-center md:justify-start gap-1 text-sm text-black dark:text-white">
+        <span className="flex justify-center items-center md:justify-start gap-1 text-sm text-black dark:text-white">
           <Calendar />
           <p className="font-semibold">Joined in</p>
           <p>{createdAt}</p>
         </span>
-        <span className="flex items-center justify-center md:justify-start gap-1 text-sm text-black dark:text-white">
-          <Users />
-          <p className="font-semibold">Having followers</p>
-          <p>{currentUser?.followers.length}</p>
-        </span>
-        <span className="flex items-center justify-center md:justify-start gap-1 text-sm text-black dark:text-white">
-          <User />
-          <p className="font-semibold">Following</p>
-          <p>{currentUser?.ownFollowers}</p>
-        </span>
+        <div className="flex flex-col items-center justify-center md:justify-start gap-1 text-sm text-black dark:text-white">
+          <FollowDropdown
+              trigger={<FollowDropdownTrigger currentUser={user?.followers.length} label="Having followers" />}
+              content={<FollowDropdownContent currentUser={user?.followers} user={users}/>}
+              title="People who are following you"
+              classname="bg-white rounded-xl"
+          />
+        </div>
+        <div className="flex items-center flex-col justify-center md:justify-start gap-1 text-sm text-black dark:text-white">
+          <FollowDropdown
+              trigger={<FollowDropdownTrigger currentUser={user?.ownFollowers.length} label="Following" />}
+              content={<FollowDropdownContent currentUser={user?.ownFollowers} user={users}/>}
+              title="People you are following"
+              classname="bg-white rounded-xl"
+          />
+        </div>
         <div className="md:hidden mt-10 mx-2 flex gap-5 justify-center">
           <div className="flex items-center">
             {!isCurrentUser ? (
               <Button
                 className={`${isFollowing && 'bg-error hover:bg-error hover:opacity-80'} p-5 w-full flex gap-2 items-center font-semibold border dark:border-black`}
                 onClick={onFollow}
-                disabled={isLoading}
+                disabled={followLoading}
               >
                 {isFollowing ? (
                   <>
