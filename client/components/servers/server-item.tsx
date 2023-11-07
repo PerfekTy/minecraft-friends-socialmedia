@@ -1,21 +1,43 @@
-import {Wifi} from "lucide-react";
+import { Wifi } from "lucide-react";
 
-const ServerItem = ({server} : {server: object}) => {
-    return (
-        <div className="flex items-center gap-5 dark:hover:bg-[#222] hover:bg-[#ccc] p-4 w-full relative">
-            <img src={server?.icon ? server?.icon : "/images/serverplaceholder.png"} alt={server.icon}/>
-            <span className="flex flex-col gap-1">
-                {server.motd.clean.map(motd => (
-                    <h2 className="text-sm">{motd}</h2>
-                ))}
-                <p className="text-green-600 font-semibold text-sm">Players online: {server.players.online} | {server.players.max}</p>
-                <p className="text-sm">{server?.ip}</p>
-            </span>
-            <div className={`${server.online ? "text-green-700" : "text-error"} absolute right-5 top-5`}>
-                <Wifi />
-            </div>
-        </div>
-    );
+interface ServerProps {
+  server: {
+    favicon: string;
+    ip: string;
+    online: boolean;
+    players: {
+      now: string;
+      max: string;
+    };
+  };
+}
+
+const ServerItem = ({ server }: ServerProps) => {
+  return (
+    <div className="flex items-center gap-5 dark:hover:bg-[#222] hover:bg-[#ccc] p-4 w-full relative">
+      <img
+        src={
+          server?.favicon ? server?.favicon : "/images/serverplaceholder.png"
+        }
+        alt="server icon"
+        width={80}
+      />
+      <span className="flex flex-col gap-1">
+        <h2 className="text-sm mr-10">{server?.ip}</h2>
+
+        <p className="text-green-600 font-semibold text-sm">
+          Players online: {server?.players?.now} | {server?.players?.max}
+        </p>
+      </span>
+      <div
+        className={`${
+          server?.online ? "text-green-700" : "text-error"
+        } absolute right-5 top-5`}
+      >
+        <Wifi />
+      </div>
+    </div>
+  );
 };
 
 export default ServerItem;

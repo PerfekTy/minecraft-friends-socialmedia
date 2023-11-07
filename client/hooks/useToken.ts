@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 
 export const useToken = () => {
-  const token = Cookies.get("token");
+  const token: string | undefined = Cookies.get("token");
 
   return { token };
 };

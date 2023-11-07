@@ -7,14 +7,8 @@ const NotFound = () => {
   const navigate = useNavigate();
   return (
     <div className="flex justify-center items-center relative h-screen overflow-hidden">
-      <video
-        autoPlay
-        loop
-        muted
-        src="/video/notfound.mp4#t=5"
-        className="absolute w-full "
-      >
-        <source />
+      <video autoPlay loop muted className="absolute w-full">
+        <source src="/video/notfound.mp4#t=5" type="video/mp4" />
       </video>
       <img
         src="/images/Did-yoo-get-lost.png"

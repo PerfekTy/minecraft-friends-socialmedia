@@ -1,34 +1,34 @@
-import {useMemo, useState} from "react";
+import { useMemo, useState } from "react";
 import { useCurrentUser } from "./useCurrentUser";
 import { useToken } from "./useToken";
 
 import axios from "axios";
 import toast from "react-hot-toast";
-import {useMutation, useQueryClient} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const useFollow = (user) => {
+export const useFollow = (user: { followers: string[]; username: string }) => {
   const { currentUser } = useCurrentUser();
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const { token } = useToken();
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   const isFollowing = useMemo(() => {
-    const list = user?.followers || [];
+    const list = user.followers || [];
 
     return list.includes(currentUser?.username);
-  }, [currentUser?.username, user?.followers]);
+  }, [currentUser?.username, user.followers]);
 
   const onFollow = async () => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       await axios.patch(
-          `http://localhost:8080/api/users/${user?.username}/follow`,
-          {},
-          {
-            headers: {
-              Authorization: "Bearer " + token,
-            },
+        `http://localhost:8080/api/users/${user.username}/follow`,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + token,
           },
+        },
       );
 
       if (isFollowing) {
@@ -36,20 +36,23 @@ export const useFollow = (user) => {
       } else {
         toast.success("Account has been followed!");
       }
-      await mutateFollow();
-      setIsLoading(false)
+
+      mutateFollow();
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong");
     }
   };
 
-  const { mutate:mutateFollow } = useMutation({
-    onSettled: ()=> {
-      queryClient.invalidateQueries(['user'], user);
-      queryClient.invalidateQueries(['isFollowing'], isFollowing);
-    }
-  })
+  const { mutate: mutateFollow } = useMutation({
+    onSettled: () => {
+      // @ts-ignore
+      queryClient.invalidateQueries(["user"], user);
+      // @ts-ignore
+      queryClient.invalidateQueries(["isFollowing"], isFollowing);
+    },
+  });
 
   return { isFollowing, onFollow, isLoading };
 };

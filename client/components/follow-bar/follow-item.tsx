@@ -1,21 +1,30 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button.tsx";
-import {UserMinus2, UserPlus2} from "lucide-react";
-import {useFollow} from "../../hooks/useFollow.ts";
+import { UserMinus2, UserPlus2 } from "lucide-react";
+import { useFollow } from "../../hooks/useFollow.ts";
 
-const FollowItem = ({ user }: { user: object | null }) => {
+const FollowItem = ({
+  user,
+}: {
+  user: {
+    username: string;
+    profileImage: string;
+    name: string;
+    followers: string[];
+  };
+}) => {
   const navigate = useNavigate();
-  const {isFollowing, onFollow} = useFollow(user);
+  const { isFollowing, onFollow } = useFollow(user);
 
   const goToUser = (e: any) => {
     e.stopPropagation();
-    navigate(`/${user?.username}`);
+    navigate(`/user/${user?.username}`);
   };
 
-  const followUser = (e: any) => {
+  const followUser = async (e: any) => {
     e.stopPropagation();
     e.preventDefault();
-    onFollow()
+    await onFollow();
   };
 
   return (
@@ -36,19 +45,21 @@ const FollowItem = ({ user }: { user: object | null }) => {
           <p className="text-sm italic">@{user?.username}</p>
         </div>
         <Button
-          className={`${isFollowing && 'bg-error hover:bg-error hover:opacity-80'} p-2 flex ml-auto gap-1 items-center font-semibold border dark:border-black hover:scale-105 transition-all`}
+          className={`${
+            isFollowing && "bg-error hover:bg-error hover:opacity-80"
+          } p-2 flex ml-auto gap-1 items-center font-semibold border dark:border-black hover:scale-105 transition-all`}
           onClick={followUser}
         >
           {isFollowing ? (
-              <>
-                <UserMinus2 size={18} />
-                <p>Unfollow</p>
-              </>
+            <>
+              <UserMinus2 size={18} />
+              <p>Unfollow</p>
+            </>
           ) : (
-              <>
-                <UserPlus2 size={18} />
-                <p>Follow</p>
-              </>
+            <>
+              <UserPlus2 size={18} />
+              <p>Follow</p>
+            </>
           )}
         </Button>
       </div>

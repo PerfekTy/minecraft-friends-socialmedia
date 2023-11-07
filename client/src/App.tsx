@@ -6,6 +6,7 @@ import Auth from "../components/layouts/AuthLayout.tsx";
 import Profile from "./pages/profile.tsx";
 import Home from "./pages/home.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Servers from "../components/servers/servers.tsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -19,8 +20,12 @@ function App() {
           element: <Home />,
         },
         {
-          path: "/:userId",
+          path: "user/:userId",
           element: <Profile />,
+        },
+        {
+          path: "/servers",
+          element: <Servers />,
         },
       ],
     },

@@ -1,11 +1,12 @@
-import { useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Input } from "../ui/input";
 
 interface ImageUploadProps {
   value?: string;
   disabled: boolean;
-  label: string;
+  label?: string;
+  className?: boolean;
   icon: React.ReactNode;
   onChange: (base64: string) => void;
 }
@@ -16,6 +17,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   label,
   onChange,
   icon,
+  className,
 }) => {
   const [base64, setBase64] = useState(value);
 
@@ -46,19 +48,21 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     onDrop: handleDrop,
     disabled,
     accept: { "image/jpeg": [], "image/png": [] },
+    maxSize: 5 * 1024 * 1024,
   });
 
   return (
     <div
       {...getRootProps({
-        className:
-          "w-full p-4 text-center text-sm border-2 border-dotted border-black dark:border-white rounded-md",
+        className: `${
+          className && "border-none p-0"
+        } w-full p-4 text-center text-sm border-2 border-dotted border-black dark:border-white rounded-md`,
       })}
     >
       <Input {...getInputProps()} />
       {base64 ? (
         <div className="flex items-center justify-center">
-          <img src={base64} height={100} width={100} alt="Uploaded image" />
+          <img src={base64} height={20} width={20} alt="Uploaded image" />
         </div>
       ) : (
         <span className="flex flex-col items-center">

@@ -2,39 +2,39 @@ import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 
-import {useNavigate, useParams} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useToken } from "../../hooks/useToken.ts";
 import { useUsers } from "../../hooks/useUsers.ts";
 
-import {
-  Calendar,
-  Trash2,
-  UserMinus2,
-  UserPlus2,
-} from "lucide-react";
+import { Calendar, Trash2, UserMinus2, UserPlus2 } from "lucide-react";
 
 import { useCurrentUser } from "../../hooks/useCurrentUser.ts";
 import UserHero from "../../components/user-view/user-hero.tsx";
 import { Button } from "../../components/ui/button.tsx";
 import EditModal from "../../components/modals/edit-modal.tsx";
-import {useFollow} from "../../hooks/useFollow.ts";
+import { useFollow } from "../../hooks/useFollow.ts";
 import FollowDropdown from "../../components/user-view/follow-dropdown.tsx";
 import FollowDropdownContent from "../../components/user-view/follow-dropdown-content.tsx";
 import FollowDropdownTrigger from "../../components/user-view/follow-dropdown-trigger.tsx";
 
 const Profile = () => {
   const params = useParams();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const { currentUser, userId } = useCurrentUser();
   const { users = [] } = useUsers();
   const { token } = useToken();
 
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({
+    username: "",
+    name: "",
+    followers: [],
+    ownFollowers: [],
+  });
   const [isCurrentUser, setIsCurrentUser] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const {isFollowing, onFollow, isLoading:followLoading} = useFollow(user)
+  const { isFollowing, onFollow, isLoading: followLoading } = useFollow(user);
 
   const createdAt = useMemo(() => {
     if (!user?.id?.date) {
@@ -65,7 +65,7 @@ const Profile = () => {
           },
         );
         toast.success("Account has been deleted!");
-        navigate('/login');
+        navigate("/login");
       } else {
         return;
       }
@@ -78,7 +78,7 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    users?.filter((user) => {
+    users?.filter((user: Record<string, any>) => {
       if (user?.username === params.userId) {
         setUser(user);
       }
@@ -89,8 +89,6 @@ const Profile = () => {
     } else {
       setIsCurrentUser(false);
     }
-
-
   }, [users, setUser, user?.username, params.userId, userId, setIsCurrentUser]);
 
   return (
@@ -114,25 +112,47 @@ const Profile = () => {
         </span>
         <div className="flex flex-col items-center justify-center md:justify-start gap-1 text-sm text-black dark:text-white">
           <FollowDropdown
-              trigger={<FollowDropdownTrigger currentUser={user?.followers.length} label="Having followers" />}
-              content={<FollowDropdownContent currentUser={user?.followers} user={users}/>}
-              title="People who are following you"
-              classname="bg-white rounded-xl"
+            trigger={
+              <FollowDropdownTrigger
+                currentUser={user?.followers.length}
+                label="Having followers"
+              />
+            }
+            content={
+              <FollowDropdownContent
+                currentUser={user?.followers}
+                user={users}
+              />
+            }
+            title="People who are following you"
+            classname="bg-white rounded-xl"
           />
         </div>
         <div className="flex items-center flex-col justify-center md:justify-start gap-1 text-sm text-black dark:text-white">
           <FollowDropdown
-              trigger={<FollowDropdownTrigger currentUser={user?.ownFollowers.length} label="Following" />}
-              content={<FollowDropdownContent currentUser={user?.ownFollowers} user={users}/>}
-              title="People you are following"
-              classname="bg-white rounded-xl"
+            trigger={
+              <FollowDropdownTrigger
+                currentUser={user?.ownFollowers.length}
+                label="Following"
+              />
+            }
+            content={
+              <FollowDropdownContent
+                currentUser={user?.ownFollowers}
+                user={users}
+              />
+            }
+            title="People you are following"
+            classname="bg-white rounded-xl"
           />
         </div>
         <div className="md:hidden mt-10 mx-2 flex gap-5 justify-center">
           <div className="flex items-center">
             {!isCurrentUser ? (
               <Button
-                className={`${isFollowing && 'bg-error hover:bg-error hover:opacity-80'} p-5 w-full flex gap-2 items-center font-semibold border dark:border-black`}
+                className={`${
+                  isFollowing && "bg-error hover:bg-error hover:opacity-80"
+                } p-5 w-full flex gap-2 items-center font-semibold border dark:border-black`}
                 onClick={onFollow}
                 disabled={followLoading}
               >

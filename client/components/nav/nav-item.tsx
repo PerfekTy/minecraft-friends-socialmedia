@@ -22,11 +22,10 @@ const NavItem = ({ href, label, iconPath, onClick }: NavItemProps) => {
       <img
         src={iconPath}
         alt={iconPath}
-        width={60}
         className={
           location.pathname === href
-            ? "bounce"
-            : "group-hover:shake transition-transform duration-300 ease-in-out"
+            ? "bounce w-[60px] aspect-square"
+            : "group-hover:shake transition-transform duration-300 ease-in-out w-[60px] aspect-square"
         }
       />
       <p className="text-xl text-black dark:text-white">{label}</p>

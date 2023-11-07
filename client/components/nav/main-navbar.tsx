@@ -8,10 +8,10 @@ import { ModeToggle } from "../ui/theme-switcher.tsx";
 interface MainNavProps {
   mobileMenu: boolean;
   setMobileMenu: (mobileMenu: boolean) => void;
-  timeLeft: string
+  timeLeft: string;
 }
 
-const MainNavbar = ({ mobileMenu, setMobileMenu, timeLeft}: MainNavProps) => {
+const MainNavbar = ({ mobileMenu, setMobileMenu, timeLeft }: MainNavProps) => {
   const { currentUser, userId } = useCurrentUser();
   const navRef = useRef<HTMLMenuElement>(null);
 
@@ -24,8 +24,13 @@ const MainNavbar = ({ mobileMenu, setMobileMenu, timeLeft}: MainNavProps) => {
     },
     {
       label: "Profile",
-      href: `/${userId}`,
+      href: `/user/${userId}`,
       iconPath: "/images/book.png",
+    },
+    {
+      label: "Servers",
+      href: `/servers`,
+      iconPath: "/images/Fire.webp",
     },
   ];
   return (

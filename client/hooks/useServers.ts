@@ -1,27 +1,31 @@
 import axios from "axios";
-import {useQuery} from "@tanstack/react-query";
-import servers from '../servers.json';
+import { useQuery } from "@tanstack/react-query";
+import servers from "../serverss.json";
 
 export const useServers = () => {
-    const fetchServerData = async (server) => {
-        try {
-            const response = await axios.get(`https://api.mcsrvstat.us/3/${server.ip}`);
-            return response.data;
-        } catch (error) {
-            return { error: `Error fetching data for ${server.ip}` };
-        }
-    };
+  const fetchServerData = async (server: { ip: string }) => {
+    try {
+      const { data } = await axios.get(
+        `https://mcapi.us/server/status?ip=${server.ip}`,
+      );
 
-    const getServers = async () => {
-        const serverPromises = servers.map(fetchServerData);
-        const serverDataArray = await Promise.all(serverPromises);
-        return serverDataArray;
-    };
+      data.ip = server.ip;
 
-    const { data, isLoading, error, isError } = useQuery({
-        queryKey: ["servers"],
-        queryFn: getServers,
-    });
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  };
 
-    return { data, isError, isLoading, error };
+  const getServers = async () => {
+    const serverPromises = servers.map(fetchServerData);
+    return await Promise.all(serverPromises);
+  };
+
+  const { data, isLoading, error, isError } = useQuery({
+    queryKey: ["servers"],
+    queryFn: getServers,
+  });
+
+  return { data, isError, isLoading, error };
 };

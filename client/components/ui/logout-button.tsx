@@ -2,6 +2,7 @@ import { Button } from "./button";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 const LogoutButton = () => {
   const navigate = useNavigate();

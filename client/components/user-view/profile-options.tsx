@@ -19,9 +19,9 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useToken } from "../../hooks/useToken.ts";
 
-const ProfileOptions = ({ user }: { user: object | null }) => {
+const ProfileOptions = ({ user }: { user: { username: string } }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const username = user?.username;
+  const username = user.username;
 
   const { token } = useToken();
   const onDelete = async () => {
