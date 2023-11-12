@@ -1,6 +1,7 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Input } from "../ui/input";
+import Compressor from "compressorjs";
 
 interface ImageUploadProps {
   value?: string;
@@ -9,15 +10,19 @@ interface ImageUploadProps {
   className?: boolean;
   icon: React.ReactNode;
   onChange: (base64: string) => void;
+  imageUploaded: boolean;
+  setImageUploaded: (imageUploaded: boolean) => void;
 }
 
 export const ImageUpload: React.FC<ImageUploadProps> = ({
   value,
   disabled,
   label,
-  onChange,
-  icon,
   className,
+  icon,
+  onChange,
+  imageUploaded,
+  setImageUploaded,
 }) => {
   const [base64, setBase64] = useState(value);
 
@@ -29,26 +34,36 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   );
 
   const handleDrop = useCallback(
-    (files: any) => {
+    async (files: any) => {
       const file = files[0];
-      const reader = new FileReader();
+      try {
+        new Compressor(file, {
+          quality: 0.6,
+          success: async (result) => {
+            const reader = new FileReader();
 
-      reader.onload = (e: any) => {
-        setBase64(e.target.result);
-        handleChange(e.target.result);
-      };
+            reader.onload = (e: any) => {
+              setBase64(e.target.result);
+              handleChange(e.target.result);
+              setImageUploaded(true);
+            };
 
-      reader.readAsDataURL(file);
+            reader.readAsDataURL(result);
+          },
+        });
+      } catch (error) {
+        console.error("Error during image compression:", error);
+      }
     },
-    [handleChange],
+    [handleChange, setImageUploaded],
   );
 
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 1,
     onDrop: handleDrop,
-    disabled,
     accept: { "image/jpeg": [], "image/png": [] },
     maxSize: 5 * 1024 * 1024,
+    disabled,
   });
 
   return (
@@ -60,9 +75,14 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       })}
     >
       <Input {...getInputProps()} />
-      {base64 ? (
+      {base64 && imageUploaded ? (
         <div className="flex items-center justify-center">
-          <img src={base64} height={20} width={20} alt="Uploaded image" />
+          <img
+            src={base64 ? base64 : ""}
+            height={20}
+            width={20}
+            alt="Uploaded image"
+          />
         </div>
       ) : (
         <span className="flex flex-col items-center">

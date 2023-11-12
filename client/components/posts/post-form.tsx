@@ -19,6 +19,7 @@ const PostForm = () => {
   const [postImage, setImage] = useState("");
   const [postBody, setPostBody] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [imageUploaded, setImageUploaded] = useState(false);
 
   const { token } = useToken();
   const { mutate: mutatePosts } = useMutation({
@@ -48,6 +49,7 @@ const PostForm = () => {
 
       setImage("");
       setPostBody("");
+      setImageUploaded(false);
     } catch (e) {
       console.log(e);
       toast.error("Something went wrong!");
@@ -82,6 +84,8 @@ const PostForm = () => {
         <Button type="button" variant="ghost">
           <ImageUpload
             disabled={isLoading}
+            imageUploaded={imageUploaded}
+            setImageUploaded={setImageUploaded}
             icon={<ImagePlusIcon size={20} />}
             value={postImage}
             className

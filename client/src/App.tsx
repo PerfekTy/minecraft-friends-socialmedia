@@ -7,6 +7,7 @@ import Profile from "./pages/profile.tsx";
 import Home from "./pages/home.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Servers from "../components/servers/servers.tsx";
+import Post from "./pages/post.tsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -20,8 +21,12 @@ function App() {
           element: <Home />,
         },
         {
-          path: "user/:userId",
+          path: "/user/:userId",
           element: <Profile />,
+        },
+        {
+          path: "/post/:userId/:postId",
+          element: <Post />,
         },
         {
           path: "/servers",

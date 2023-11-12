@@ -1,4 +1,5 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface PostItemProps {
   post: {
@@ -6,10 +7,12 @@ interface PostItemProps {
     postImage: string;
     postBody: string;
     createdAt: Date;
+    idd: string;
   };
 }
 
 const PostItem = ({ post }: PostItemProps) => {
+  const navigate = useNavigate();
   const createdAt = useMemo(() => {
     if (!post?.createdAt) {
       return null;
@@ -21,11 +24,16 @@ const PostItem = ({ post }: PostItemProps) => {
     });
   }, [post?.createdAt]);
 
+  const goToPost = useCallback(() => {
+    navigate(`post/${post?.username}/${post?.idd}`);
+  }, [navigate, post?.idd, post?.username]);
+
   return (
     <div
       className={`${
         post?.postImage && "w-fit"
-      } p-5 bg-[#eee] max-w-[560px] md:mx-auto mx-4 dark:bg-[#222] rounded-2xl my-10 hover:dark:bg-[#333] hover:bg-[#ddd]`}
+      } p-5 bg-[#eee] max-w-[560px] md:mx-auto mx-4 dark:bg-[#222] rounded-2xl my-10 hover:dark:bg-[#333] hover:bg-[#ddd] cursor-pointer`}
+      onClick={goToPost}
     >
       <div className="flex items-center gap-2 px-4">
         <img

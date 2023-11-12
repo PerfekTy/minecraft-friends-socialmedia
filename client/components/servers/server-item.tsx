@@ -23,7 +23,7 @@ const ServerItem = ({ server }: ServerProps) => {
         width={80}
       />
       <span className="flex flex-col gap-1">
-        <h2 className="text-sm mr-10">{server?.ip}</h2>
+        <h2 className="text-lg mr-10 font-semibold">{server?.ip}</h2>
 
         <p className="text-green-600 font-semibold text-sm">
           Players online: {server?.players?.now} | {server?.players?.max}

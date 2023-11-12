@@ -51,6 +51,7 @@ const DefaultLayout = () => {
       </main>
       <Outlet />
       {!params.userId ? <FollowBar /> : null}
+      {params.postId && <FollowBar />}
     </div>
   );
 };
