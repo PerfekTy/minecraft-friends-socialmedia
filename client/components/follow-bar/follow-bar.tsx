@@ -19,7 +19,7 @@ const FollowBar = () => {
         </p>
       </span>
       {!isLoading ? (
-        filteredUsers?.map((user: Record<any, any>, key: number) => (
+        filteredUsers?.map((user, key: number) => (
           <FollowItem key={key} user={user} />
         ))
       ) : (

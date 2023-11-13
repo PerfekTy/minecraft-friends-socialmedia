@@ -60,15 +60,15 @@
   }
 
   .navbar {
-    background: url("public/images/blacktxt.png");
+    background: url("/images/blacktxt.png");
   }
 
   .d-layout {
-    background: url("public/images/bg-wool-light.png");
+    background: url("/images/bg-wool-light.png");
   }
 
   .d-layout-dark {
-    background: url("public/images/bg-wool-dark.png");
+    background: url("/images/bg-wool-dark.png");
   }
 
   .bounce {

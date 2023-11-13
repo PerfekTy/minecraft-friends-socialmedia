@@ -33,7 +33,7 @@ const UserHero = ({ userId, user }: UserHeroProps) => {
           user.coverImage ? user.coverImage : "/images/cover-placeholder.jpg"
         }
         alt="cover image"
-        className="px-2 rounded-xl md:my-2 my-20 hover:opacity-90 object-cover w-full lg:min-w-[800px] md:min-w-[400px] min-w-[300px]"
+        className="px-2 rounded-xl md:my-2 my-20 hover:opacity-90 object-cover w-full max-w-lg lg:min-w-[800px] md:min-w-[400px] min-w-[300px]"
       />
       <div className="absolute md:-bottom-22 -bottom-14 translate-x-1/2 right-1/2 md:left-16 md:translate-x-0">
         <img

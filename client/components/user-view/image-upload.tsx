@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Input } from "../ui/input";
 import Compressor from "compressorjs";
+import { useParams } from "react-router-dom";
 
 interface ImageUploadProps {
   value?: string;
@@ -25,6 +26,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   setImageUploaded,
 }) => {
   const [base64, setBase64] = useState(value);
+  const params = useParams();
 
   const handleChange = useCallback(
     (base64: string) => {
@@ -79,9 +81,12 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         <div className="flex items-center justify-center">
           <img
             src={base64 ? base64 : ""}
-            height={20}
-            width={20}
             alt="Uploaded image"
+            className={`${
+              params.userId && !params.postId
+                ? "w-1/3"
+                : params.userId && params.postId && "w-[20px]"
+            } ${!params.userId && !params.postId && "w-[20px]"}`}
           />
         </div>
       ) : (

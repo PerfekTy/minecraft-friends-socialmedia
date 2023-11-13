@@ -1,12 +1,9 @@
 import PostForm from "./post-form.tsx";
 import { usePosts } from "../../hooks/usePosts.ts";
 import PostItem from "./post-item.tsx";
-import { useParams } from "react-router-dom";
-import Post from "../../src/pages/post.tsx";
 
 const PostFeed = () => {
   const { posts = [], isLoading } = usePosts();
-  const params = useParams();
 
   const sortedPosts = [...posts].sort((a, b) => {
     return new Date(b.createdAt) - new Date(a.createdAt);
@@ -21,7 +18,7 @@ const PostFeed = () => {
           width={600}
         />
       </div>
-      <PostForm />
+      <PostForm label="What's happening?!" title="Post" />
       {isLoading ? (
         <div className="grid place-items-center rotate">
           <img
@@ -31,7 +28,7 @@ const PostFeed = () => {
           />
         </div>
       ) : (
-        sortedPosts?.map((post: Record<string, any>, key: number) => (
+        sortedPosts?.map((post, key: number) => (
           <PostItem key={key} post={post} />
         ))
       )}

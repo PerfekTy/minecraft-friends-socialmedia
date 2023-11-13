@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -21,9 +22,13 @@ public class PostService {
         if (authentication != null && authentication.isAuthenticated()) {
             String loggedUser = authentication.getName();
             LocalDateTime createdAt = LocalDateTime.now();
+            Random random = new Random();
+            String randomId = String.valueOf(random.nextLong(Long.MAX_VALUE) + 1);
+
 
             Post post = new Post();
             post.setUsername(loggedUser);
+            post.setIdd(randomId);
             post.setPostBody(postBody);
             post.setPostImage(postImage);
             post.setCreatedAt(createdAt);

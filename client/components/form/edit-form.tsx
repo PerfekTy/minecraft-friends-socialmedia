@@ -18,6 +18,7 @@ function EditForm() {
   const [profileImage, setProfileImage] = useState("");
   const [coverImage, setCoverImage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [imageUploaded, setImageUploaded] = useState(false);
 
   useEffect(() => {
     setName(currentUser?.name);
@@ -60,6 +61,8 @@ function EditForm() {
           label="Upolad cover image"
           icon={<UploadCloudIcon />}
           onChange={(image) => setCoverImage(image)}
+          imageUploaded={imageUploaded}
+          setImageUploaded={setImageUploaded}
         />
       </fieldset>
       <fieldset name="coverImg" className="space-y-1 my-2 text-left">
@@ -68,6 +71,8 @@ function EditForm() {
           label="Upolad profile image"
           icon={<UploadCloudIcon />}
           onChange={(image) => setProfileImage(image)}
+          imageUploaded={imageUploaded}
+          setImageUploaded={setImageUploaded}
         />
       </fieldset>
       <fieldset name="name" className="space-y-1 my-2 text-left">

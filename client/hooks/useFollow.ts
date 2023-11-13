@@ -6,7 +6,11 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const useFollow = (user: { followers: string[]; username: string }) => {
+export const useFollow = (user: {
+  username: string;
+  followers: string[];
+  ownFollowers: string[];
+}) => {
   const { currentUser } = useCurrentUser();
   const [isLoading, setIsLoading] = useState(false);
   const { token } = useToken();

@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface PostItemProps {
   post: {
@@ -9,10 +9,13 @@ interface PostItemProps {
     createdAt: Date;
     idd: string;
   };
+  postUsernames: string[];
 }
 
 const PostItem = ({ post }: PostItemProps) => {
+  const params = useParams();
   const navigate = useNavigate();
+
   const createdAt = useMemo(() => {
     if (!post?.createdAt) {
       return null;
@@ -25,21 +28,26 @@ const PostItem = ({ post }: PostItemProps) => {
   }, [post?.createdAt]);
 
   const goToPost = useCallback(() => {
+    if (params.postId) {
+      return null;
+    }
     navigate(`post/${post?.username}/${post?.idd}`);
-  }, [navigate, post?.idd, post?.username]);
+  }, [navigate, post.idd, post.username, params.postId]);
 
   return (
     <div
       className={`${
         post?.postImage && "w-fit"
-      } p-5 bg-[#eee] max-w-[560px] md:mx-auto mx-4 dark:bg-[#222] rounded-2xl my-10 hover:dark:bg-[#333] hover:bg-[#ddd] cursor-pointer`}
+      } p-5 bg-[#eee] max-w-[560px] md:mx-auto mx-4 dark:bg-[#222] rounded-2xl my-10 hover:dark:bg-[#333] hover:bg-[#ddd] ${
+        !params.postId && "cursor-pointer"
+      }`}
       onClick={goToPost}
     >
       <div className="flex items-center gap-2 px-4">
         <img
-          src={"/images/placeholder.jpg"}
+          src={"" || "/images/placeholder.jpg"}
           alt=""
-          className="w-14 aspect-square border-4 border-white dark:border-navbar object-cover rounded-full hover:opacity-90"
+          className="w-12 aspect-square object-cover rounded-full hover:opacity-90"
         />
         <span className="flex gap-2 items-center text-sm">
           <p className="font-semibold">@{post?.username}</p>

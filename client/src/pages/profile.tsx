@@ -26,8 +26,12 @@ const Profile = () => {
   const { token } = useToken();
 
   const [user, setUser] = useState({
+    id: {
+      date: "",
+    },
     username: "",
     name: "",
+    description: "",
     followers: [],
     ownFollowers: [],
   });

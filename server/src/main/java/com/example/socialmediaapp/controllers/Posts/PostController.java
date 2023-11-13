@@ -3,12 +3,13 @@ package com.example.socialmediaapp.controllers;
 import com.example.socialmediaapp.models.Post;
 import com.example.socialmediaapp.repositories.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+import java.util.Optional;
 @RestController
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
@@ -28,5 +29,11 @@ public class PostController {
     public ResponseEntity<Object> posts() {
         List posts = postRepository.findAll();
         return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<Object> post(@PathVariable String postId) {
+       Post post = postRepository.findByIdd(postId);
+       return ResponseEntity.ok(post);
     }
 }
