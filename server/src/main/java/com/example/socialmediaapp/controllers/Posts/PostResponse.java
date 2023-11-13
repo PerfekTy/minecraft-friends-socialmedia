@@ -1,4 +1,4 @@
-package com.example.socialmediaapp.controllers;
+package com.example.socialmediaapp.controllers.Posts;
 
 import lombok.Data;
 

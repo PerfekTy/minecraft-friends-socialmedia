@@ -1,16 +1,15 @@
-package com.example.socialmediaapp.controllers;
+package com.example.socialmediaapp.controllers.Users;
 
 import com.example.socialmediaapp.models.User;
 import com.example.socialmediaapp.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -49,5 +48,11 @@ public class UserController {
     public ResponseEntity<Object> toggleFollow(@PathVariable String username) {
         service.toggleFollowUser(username);
         return ResponseEntity.ok("User followed successfully");
+    }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<Object> user(@PathVariable String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        return ResponseEntity.ok(user);
     }
 }

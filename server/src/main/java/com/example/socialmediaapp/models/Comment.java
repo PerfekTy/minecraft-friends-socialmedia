@@ -11,10 +11,10 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
 
 @Data
-@Document(collection = "posts")
+@Document(collection = "comments")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Post {
+public class Comment {
     @Id
     private ObjectId id;
 
@@ -22,14 +22,11 @@ public class Post {
     private String username;
 
     @Field
-    private String postBody;
+    private String commentBody;
 
     @Field
-    private String postImage;
+    private String commentImage;
 
     @Field
     private LocalDateTime createdAt;
-
-    @Field
-    private String idd;
 }

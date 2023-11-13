@@ -1,4 +1,4 @@
-package com.example.socialmediaapp.controllers;
+package com.example.socialmediaapp.controllers.Users;
 
 import com.example.socialmediaapp.models.User;
 import com.example.socialmediaapp.repositories.UserRepository;
@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Optional;
 

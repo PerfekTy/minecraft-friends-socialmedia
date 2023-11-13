@@ -27,7 +27,7 @@ public class SecurityConfiguration {
                 .cors()
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/auth/**", "/api/users", "/api/posts")
+                .requestMatchers("/api/auth/**", "/api/users", "/api/posts", "/api/comments", "/api/users/{username}")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
