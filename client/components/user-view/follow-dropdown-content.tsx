@@ -57,7 +57,7 @@ const FollowDropdownContent = ({
                   : "/images/placeholder.jpg"
               }
               alt=""
-              className="w-16 aspect-square border-4 object-cover rounded-full hover:opacity-90"
+              className="w-16 aspect-square border object-cover rounded-full hover:opacity-90"
             />
           </div>
           <span>

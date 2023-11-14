@@ -7,7 +7,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useToken } from "../../hooks/useToken.ts";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { usePosts } from "../../hooks/usePosts.ts";
 import { useComments } from "../../hooks/useComments.ts";
 
@@ -15,9 +14,8 @@ const PostForm = ({ label, title }: { label: string; title: string }) => {
   const params = useParams();
   const { currentUser } = useCurrentUser();
   const navigate = useNavigate();
-  const { posts } = usePosts();
-  const { comments } = useComments();
-  const queryClient = useQueryClient();
+  const { mutatePosts } = usePosts();
+  const { mutateComments } = useComments();
 
   const [postImage, setPostImage] = useState("");
   const [postBody, setPostBody] = useState("");
@@ -28,17 +26,6 @@ const PostForm = ({ label, title }: { label: string; title: string }) => {
   const [imageUploaded, setImageUploaded] = useState(false);
 
   const { token } = useToken();
-  const { mutate: mutatePosts } = useMutation({
-    onSettled: () => {
-      queryClient.invalidateQueries(posts);
-    },
-  });
-
-  const { mutate: mutateComments } = useMutation({
-    onSettled: () => {
-      queryClient.invalidateQueries(comments);
-    },
-  });
 
   const createPost = async () => {
     if (!postBody.trim()) {

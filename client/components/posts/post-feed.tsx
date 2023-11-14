@@ -9,6 +9,10 @@ const PostFeed = () => {
     return new Date(b.createdAt) - new Date(a.createdAt);
   });
 
+  const postUsernames = sortedPosts.map((post) => {
+    return { username: post.username };
+  });
+
   return (
     <div className="2xl:w-2/3 w-full">
       <div className="flex justify-center m-4">
@@ -29,7 +33,7 @@ const PostFeed = () => {
         </div>
       ) : (
         sortedPosts?.map((post, key: number) => (
-          <PostItem key={key} post={post} />
+          <PostItem key={key} post={post} postUsernames={postUsernames} />
         ))
       )}
     </div>

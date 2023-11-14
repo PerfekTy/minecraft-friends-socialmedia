@@ -6,7 +6,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useToken } from "../../hooks/useToken.ts";
 import { useUsers } from "../../hooks/useUsers.ts";
 
-import { Calendar, Trash2, UserMinus2, UserPlus2 } from "lucide-react";
+import {
+  ArrowDownAZ,
+  ArrowDownWideNarrow,
+  Calendar,
+  RefreshCw,
+  Trash2,
+  UserMinus2,
+  UserPlus2,
+} from "lucide-react";
 
 import { useCurrentUser } from "../../hooks/useCurrentUser.ts";
 import UserHero from "../../components/user-view/user-hero.tsx";
@@ -16,6 +24,8 @@ import { useFollow } from "../../hooks/useFollow.ts";
 import FollowDropdown from "../../components/user-view/follow-dropdown.tsx";
 import FollowDropdownContent from "../../components/user-view/follow-dropdown-content.tsx";
 import FollowDropdownTrigger from "../../components/user-view/follow-dropdown-trigger.tsx";
+import { usePosts } from "../../hooks/usePosts.ts";
+import PostItem from "../../components/posts/post-item.tsx";
 
 const Profile = () => {
   const params = useParams();
@@ -24,6 +34,7 @@ const Profile = () => {
   const { currentUser, userId } = useCurrentUser();
   const { users = [] } = useUsers();
   const { token } = useToken();
+  const { posts = [], mutatePosts } = usePosts();
 
   const [user, setUser] = useState({
     id: {
@@ -37,6 +48,7 @@ const Profile = () => {
   });
   const [isCurrentUser, setIsCurrentUser] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [profilePosts, setProfilePosts] = useState([]);
 
   const { isFollowing, onFollow, isLoading: followLoading } = useFollow(user);
 
@@ -82,18 +94,35 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    users?.filter((user: Record<string, any>) => {
-      if (user?.username === params.userId) {
-        setUser(user);
-      }
-    });
-
-    if (userId === user?.username) {
-      setIsCurrentUser(true);
-    } else {
-      setIsCurrentUser(false);
+    const filteredUser = users?.find(
+      (user: Record<string, any>) => user?.username === params.userId,
+    );
+    if (filteredUser) {
+      setUser(filteredUser);
+      setIsCurrentUser(userId === filteredUser.username);
     }
-  }, [users, setUser, user?.username, params.userId, userId, setIsCurrentUser]);
+
+    const filteredPosts = posts?.filter(
+      (post: Record<string, any>) => post?.username === params.userId,
+    );
+    if (filteredPosts) {
+      setProfilePosts((prevPosts) => {
+        const uniquePosts = filteredPosts.filter(
+          (newPost) =>
+            !prevPosts.some((prevPost) => prevPost.id === newPost.id),
+        );
+        return [...prevPosts, ...uniquePosts];
+      });
+    }
+  }, [
+    users,
+    posts,
+    userId,
+    params.userId,
+    setUser,
+    setIsCurrentUser,
+    setProfilePosts,
+  ]);
 
   return (
     <div className="mx-auto dark:bg-navbar bg-navbarLight bg-opacity-50 p-10 w-full md:w-fit">
@@ -107,7 +136,6 @@ const Profile = () => {
           {user?.description && <> "{user?.description}"</>}
         </p>
       </span>
-
       <div className="text-white md:mt-20 mt-12 flex md:flex-row flex-col gap-5 md:justify-evenly">
         <span className="flex justify-center items-center md:justify-start gap-1 text-sm text-black dark:text-white">
           <Calendar />
@@ -188,6 +216,16 @@ const Profile = () => {
             )}
           </div>
         </div>
+      </div>
+      <div className="dark:text-white">
+        <div className="flex flex-col justify-center gap-5 mt-10">
+          <hr className="border dark:border-[#555] border-[#ccc]" />
+          <div className="flex tracking-widest justify-center gap-2 items-center">
+            <p> Your posts</p> <ArrowDownAZ size={20} />
+          </div>
+          <hr className="border dark:border-[#555] border-[#ccc]" />
+        </div>
+        {profilePosts?.map((post) => <PostItem key={post?.idd} post={post} />)}
       </div>
     </div>
   );

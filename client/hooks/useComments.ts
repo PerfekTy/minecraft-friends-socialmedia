@@ -1,7 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 export const useComments = () => {
+  const queryClient = useQueryClient();
   const {
     data: comments,
     isLoading,
@@ -15,5 +16,11 @@ export const useComments = () => {
     },
   });
 
-  return { comments, isError, error, isLoading };
+  const { mutate: mutateComments } = useMutation({
+    onSettled: () => {
+      queryClient.invalidateQueries(comments);
+    },
+  });
+
+  return { comments, isError, error, isLoading, mutateComments };
 };

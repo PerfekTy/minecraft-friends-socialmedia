@@ -8,10 +8,15 @@ const CommentFeed = () => {
     return new Date(b.createdAt) - new Date(a.createdAt);
   });
 
-  console.log(comments);
+  const commentUsernames = sortedComments.map((comment) => {
+    return { username: comment.username };
+  });
+
   return (
     <div>
-      {sortedComments?.map((comment) => <CommentItem comment={comment} />)}
+      {sortedComments?.map((comment) => (
+        <CommentItem comment={comment} commentUsernames={commentUsernames} />
+      ))}
     </div>
   );
 };
