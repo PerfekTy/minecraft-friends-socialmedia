@@ -29,4 +29,7 @@ public class Comment {
 
     @Field
     private LocalDateTime createdAt;
+
+    @Field
+    private String idd;
 }

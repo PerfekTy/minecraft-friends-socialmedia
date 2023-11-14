@@ -1,5 +1,7 @@
 package com.example.socialmediaapp.controllers.Comments;
 
+import com.example.socialmediaapp.models.Comment;
+import com.example.socialmediaapp.models.Post;
 import com.example.socialmediaapp.repositories.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,5 +28,12 @@ public class CommentController {
     public ResponseEntity<Object> comments() {
         List comments = commentRepository.findAll();
         return ResponseEntity.ok(comments);
+    }
+
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Object> delete(@PathVariable String commentId) {
+        Comment comment = commentRepository.findByIdd(commentId);
+        commentRepository.delete(comment);
+        return ResponseEntity.ok("Comment deleted successfully");
     }
 }
