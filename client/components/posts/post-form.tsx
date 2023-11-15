@@ -4,11 +4,10 @@ import { ImagePlusIcon } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { useCurrentUser } from "../../hooks/useCurrentUser.ts";
 import { useNavigate, useParams } from "react-router-dom";
-import { useToken } from "../../hooks/useToken.ts";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { usePosts } from "../../hooks/usePosts.ts";
 import { useComments } from "../../hooks/useComments.ts";
+import { POST } from "../../src/helpers/async_actions.ts";
 
 const PostForm = ({ label, title }: { label: string; title: string }) => {
   const params = useParams();
@@ -16,81 +15,44 @@ const PostForm = ({ label, title }: { label: string; title: string }) => {
   const navigate = useNavigate();
   const { mutatePosts } = usePosts();
   const { mutateComments } = useComments();
-
   const [postImage, setPostImage] = useState("");
   const [postBody, setPostBody] = useState("");
   const [commentImage, setCommentImage] = useState("");
   const [commentBody, setCommentBody] = useState("");
-
-  const [isLoading, setIsLoading] = useState(false);
   const [imageUploaded, setImageUploaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { token } = useToken();
-
-  const createPost = async () => {
-    if (!postBody.trim()) {
-      return toast.error("Post cannot be empty!");
-    }
-    setIsLoading(true);
-    await axios.post(
-      "http://localhost:8080/api/posts/create",
-      { postBody, postImage },
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      },
-    );
-
-    mutatePosts();
-    toast.success("Post created!");
-    setPostImage("");
-    setPostBody("");
-    setImageUploaded(false);
-    setIsLoading(false);
-  };
-
-  const createComment = async () => {
-    if (!commentBody.trim()) {
-      return toast.error("Comment cannot be empty!");
-    }
-
-    setIsLoading(true);
-    await axios.post(
-      "http://localhost:8080/api/comments/create",
-      { commentBody, commentImage },
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      },
-    );
-
-    mutateComments();
-    toast.success("Comment created!");
-    setCommentImage("");
-    setCommentBody("");
-    setImageUploaded(false);
-    setIsLoading(false);
-  };
-
-  const apiCall = (e: FormEvent) => {
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
-    try {
-      if (!params.postId) {
-        createPost();
-      } else {
-        createComment();
-      }
-    } catch (e) {
-      console.log(e);
-      toast.error("Something went wrong!");
+    if (!postBody.trim() && !commentBody.trim()) {
+      return toast.error("Field cannot be empty!");
+    }
+    if (!params.postId) {
+      setIsLoading(true);
+      await POST("posts/create", { postBody, postImage });
+      toast.success("Post created!");
+      setPostImage("");
+      setPostBody("");
+      setIsLoading(false);
+      setImageUploaded(false);
+      return mutatePosts();
+    } else {
+      setIsLoading(true);
+      await POST("comments/create", { commentBody, commentImage });
+      toast.success("Comment created!");
+      setCommentImage("");
+      setCommentBody("");
+      setIsLoading(false);
+      setImageUploaded(false);
+      return mutateComments();
     }
   };
 
   return (
-    <form className="flex flex-col md:w-1/2 md:mx-auto mx-5" onSubmit={apiCall}>
+    <form
+      className="flex flex-col md:w-1/2 md:mx-auto mx-5"
+      onSubmit={onSubmit}
+    >
       <fieldset className="flex flex-col justify-center relative">
         <img
           src={

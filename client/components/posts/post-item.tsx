@@ -1,12 +1,10 @@
-import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { FormEvent, useCallback, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useUser } from "../../hooks/useUser.ts";
 import { Trash2 } from "lucide-react";
 import { useCurrentUser } from "../../hooks/useCurrentUser.ts";
 import toast from "react-hot-toast";
-import axios from "axios";
 import { usePosts } from "../../hooks/usePosts.ts";
-import { useToken } from "../../hooks/useToken.ts";
+import { DELETE } from "../../src/helpers/async_actions.ts";
 
 interface PostItemProps {
   post: {
@@ -16,17 +14,13 @@ interface PostItemProps {
     createdAt: Date;
     idd: string;
   };
-  postUsernames?: [{ username: string[] }];
 }
 
-const PostItem = ({ post, postUsernames }: PostItemProps) => {
+const PostItem = ({ post }: PostItemProps) => {
   const params = useParams();
   const navigate = useNavigate();
-  const [userProfileImage, setUserProfileImage] = useState<string[]>([]);
-  const { user } = useUser(postUsernames);
   const { currentUser } = useCurrentUser();
   const { mutatePosts } = usePosts();
-  const { token } = useToken();
 
   const createdAt = useMemo(() => {
     if (!post?.createdAt) {
@@ -49,37 +43,14 @@ const PostItem = ({ post, postUsernames }: PostItemProps) => {
     }
 
     return navigate(`post/${post?.username}/${post?.idd}`);
-  }, [navigate, post.idd, post.username, params.postId]);
-
-  useEffect(() => {
-    if (!user) {
-      return setUserProfileImage([]);
-    }
-
-    const profileImage = user.filter((user) => {
-      if (user?.username !== post?.username) {
-        return;
-      }
-      return { image: user.profileImage };
-    });
-
-    setUserProfileImage(profileImage);
-  }, [user]);
+  }, [navigate, post?.idd, post?.username, params?.postId]);
 
   const onDelete = async (e: FormEvent) => {
     e.stopPropagation();
-    try {
-      await axios.delete(`http://localhost:8080/api/posts/${post.idd}`, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      });
-      toast.success("Post deleted!");
-      mutatePosts();
-    } catch (e) {
-      console.log(e);
-      toast.error("Something went wrong");
-    }
+    await DELETE(`posts/${post?.idd}`);
+    toast.success("Post deleted!");
+    mutatePosts();
+    return navigate("/");
   };
 
   return (
@@ -93,7 +64,7 @@ const PostItem = ({ post, postUsernames }: PostItemProps) => {
     >
       <div className="flex items-center gap-2 px-4">
         <img
-          src={userProfileImage[0]?.profileImage || "/images/placeholder.jpg"}
+          src={"/images/placeholder.jpg"}
           alt=""
           className="w-10 aspect-square object-cover rounded-full hover:opacity-90"
         />

@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import { GET } from "../src/helpers/async_actions.ts";
 
 export const useComments = () => {
   const queryClient = useQueryClient();
@@ -10,10 +10,7 @@ export const useComments = () => {
     isError,
   } = useQuery({
     queryKey: ["comments"],
-    queryFn: async () => {
-      const { data } = await axios.get("http://localhost:8080/api/comments");
-      return data;
-    },
+    queryFn: async () => await GET("comments"),
   });
 
   const { mutate: mutateComments } = useMutation({

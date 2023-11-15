@@ -1,8 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import { GET } from "../src/helpers/async_actions.ts";
 
 export const usePosts = () => {
   const queryClient = useQueryClient();
+
   const {
     data: posts,
     isLoading,
@@ -10,10 +11,7 @@ export const usePosts = () => {
     isError,
   } = useQuery({
     queryKey: ["posts"],
-    queryFn: async () => {
-      const { data } = await axios.get("http://localhost:8080/api/posts");
-      return data;
-    },
+    queryFn: () => GET("posts"),
   });
 
   const { mutate: mutatePosts } = useMutation({

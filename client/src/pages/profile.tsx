@@ -8,9 +8,7 @@ import { useUsers } from "../../hooks/useUsers.ts";
 
 import {
   ArrowDownAZ,
-  ArrowDownWideNarrow,
   Calendar,
-  RefreshCw,
   Trash2,
   UserMinus2,
   UserPlus2,
@@ -34,7 +32,7 @@ const Profile = () => {
   const { currentUser, userId } = useCurrentUser();
   const { users = [] } = useUsers();
   const { token } = useToken();
-  const { posts = [], mutatePosts } = usePosts();
+  const { posts = [] } = usePosts();
 
   const [user, setUser] = useState({
     id: {

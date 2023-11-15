@@ -1,11 +1,9 @@
-import { FormEvent, useEffect, useMemo, useState } from "react";
-import { useUser } from "../../hooks/useUser.ts";
-import axios from "axios";
+import { FormEvent, useMemo } from "react";
 import toast from "react-hot-toast";
 import { Trash2 } from "lucide-react";
 import { useCurrentUser } from "../../hooks/useCurrentUser.ts";
 import { useComments } from "../../hooks/useComments.ts";
-import { useToken } from "../../hooks/useToken.ts";
+import { DELETE } from "../../src/helpers/async_actions.ts";
 
 interface CommentItemProps {
   comment: {
@@ -15,16 +13,11 @@ interface CommentItemProps {
     username: string;
     createdAt: string;
   };
-
-  commentUsernames: [{ username: string }];
 }
 
-const CommentItem = ({ comment, commentUsernames }: CommentItemProps) => {
-  const [userProfileImage, setUserProfileImage] = useState<string[]>([]);
-  const { user } = useUser(commentUsernames);
+const CommentItem = ({ comment }: CommentItemProps) => {
   const { currentUser } = useCurrentUser();
   const { mutateComments } = useComments();
-  const { token } = useToken();
 
   const createdAt = useMemo(() => {
     if (!comment?.createdAt) {
@@ -37,35 +30,11 @@ const CommentItem = ({ comment, commentUsernames }: CommentItemProps) => {
     });
   }, [comment?.createdAt]);
 
-  useEffect(() => {
-    if (!user) {
-      return setUserProfileImage([]);
-    }
-
-    const profileImage = user.filter((user) => {
-      if (user.username !== comment.username) {
-        return;
-      }
-      return { image: user.profileImage };
-    });
-
-    setUserProfileImage(profileImage);
-  }, [user]);
-
   const onDelete = async (e: FormEvent) => {
     e.stopPropagation();
-    try {
-      await axios.delete(`http://localhost:8080/api/comments/${comment.idd}`, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      });
-      toast.success("Comment deleted!");
-      mutateComments();
-    } catch (e) {
-      console.log(e);
-      toast.error("Something went wrong");
-    }
+    await DELETE(`comments/${comment.idd}`);
+    toast.success("Comment deleted!");
+    mutateComments();
   };
 
   return (
@@ -76,7 +45,7 @@ const CommentItem = ({ comment, commentUsernames }: CommentItemProps) => {
     >
       <div className="flex items-center gap-2 px-4">
         <img
-          src={userProfileImage[0]?.profileImage || "/images/placeholder.jpg"}
+          src={"/images/placeholder.jpg"}
           alt=""
           className="w-10 aspect-square object-cover rounded-full hover:opacity-90"
         />
@@ -84,7 +53,7 @@ const CommentItem = ({ comment, commentUsernames }: CommentItemProps) => {
           <p className="font-semibold">@{comment?.username}</p>
           <p className="font-light">{createdAt}</p>
         </span>
-        {comment.username === currentUser.username && (
+        {comment.username === currentUser?.username && (
           <div
             className="absolute right-5 cursor-pointer transition-all hover:scale-110 hover:text-error border-[#ccc] dark:border-[#555] border p-2 rounded-lg hover:bg-error hover:bg-opacity-20"
             onClick={onDelete}
