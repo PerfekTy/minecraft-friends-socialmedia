@@ -64,7 +64,7 @@ const PostItem = ({ post, postUsernames }: PostItemProps) => {
     });
 
     setUserProfileImage(profileImage);
-  }, [user]);
+  }, [post?.username, user]);
 
   const onDelete = async (e: FormEvent) => {
     e.stopPropagation();
@@ -76,6 +76,9 @@ const PostItem = ({ post, postUsernames }: PostItemProps) => {
       });
       toast.success("Post deleted!");
       mutatePosts();
+      if (params.postId) {
+        navigate("/")
+      }
     } catch (e) {
       console.log(e);
       toast.error("Something went wrong");
