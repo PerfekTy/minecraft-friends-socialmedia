@@ -1,9 +1,10 @@
 import NavItem from "./nav-item";
-import { useCurrentUser } from "../../hooks/useCurrentUser.ts";
 import { useClickOutside } from "../../hooks/useClickOutside.ts";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import LogoutButton from "../ui/logout-button.tsx";
 import { ModeToggle } from "../ui/theme-switcher.tsx";
+import { useDispatch, useSelector } from "react-redux";
+import { getCurrentUser } from "../../src/store/current-user-slice.ts";
 
 interface MainNavProps {
   mobileMenu: boolean;
@@ -12,7 +13,9 @@ interface MainNavProps {
 }
 
 const MainNavbar = ({ mobileMenu, setMobileMenu, timeLeft }: MainNavProps) => {
-  const { currentUser, userId } = useCurrentUser();
+  const dispatch = useDispatch();
+  const { currentUser } = useSelector((state) => state.currentUser);
+
   const navRef = useRef<HTMLMenuElement>(null);
 
   useClickOutside(navRef, mobileMenu, setMobileMenu);
@@ -24,7 +27,7 @@ const MainNavbar = ({ mobileMenu, setMobileMenu, timeLeft }: MainNavProps) => {
     },
     {
       label: "Profile",
-      href: `/user/${userId}`,
+      href: `/user/${currentUser.username}`,
       iconPath: "/images/book.png",
     },
     {
@@ -33,6 +36,11 @@ const MainNavbar = ({ mobileMenu, setMobileMenu, timeLeft }: MainNavProps) => {
       iconPath: "/images/Fire.webp",
     },
   ];
+
+  useEffect(() => {
+    dispatch(getCurrentUser());
+  }, [dispatch]);
+
   return (
     <nav
       className="flex flex-col p-5 gap-10 items-center mt-26 md:mt-3"

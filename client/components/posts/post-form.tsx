@@ -2,19 +2,17 @@ import { Button } from "../ui/button";
 import { ImageUpload } from "../user-view/image-upload";
 import { ImagePlusIcon } from "lucide-react";
 import { FormEvent, useState } from "react";
-import { useCurrentUser } from "../../hooks/useCurrentUser.ts";
 import { useNavigate, useParams } from "react-router-dom";
-import { useToken } from "../../hooks/useToken.ts";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { usePosts } from "../../hooks/usePosts.ts";
 import { useComments } from "../../hooks/useComments.ts";
+import { useSelector } from "react-redux";
+import { POST } from "../../src/helpers/__async.ts";
 
 const PostForm = ({ label, title }: { label: string; title: string }) => {
   const params = useParams();
-  const { currentUser } = useCurrentUser();
+  const { currentUser } = useSelector((state) => state.currentUser);
   const navigate = useNavigate();
-  const { mutatePosts } = usePosts();
   const { mutateComments } = useComments();
 
   const [postImage, setPostImage] = useState("");
@@ -25,24 +23,13 @@ const PostForm = ({ label, title }: { label: string; title: string }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [imageUploaded, setImageUploaded] = useState(false);
 
-  const { token } = useToken();
-
   const createPost = async () => {
     if (!postBody.trim()) {
       return toast.error("Post cannot be empty!");
     }
     setIsLoading(true);
-    await axios.post(
-      "http://localhost:8080/api/posts/create",
-      { postBody, postImage },
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      },
-    );
-
-    mutatePosts();
+    await POST("posts/create", { postBody, postImage });
+    // mutatePosts();
     toast.success("Post created!");
     setPostImage("");
     setPostBody("");
@@ -56,15 +43,7 @@ const PostForm = ({ label, title }: { label: string; title: string }) => {
     }
 
     setIsLoading(true);
-    await axios.post(
-      "http://localhost:8080/api/comments/create",
-      { commentBody, commentImage },
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      },
-    );
+    await POST("comments/create", { commentBody, commentImage });
 
     mutateComments();
     toast.success("Comment created!");

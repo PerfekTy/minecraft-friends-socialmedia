@@ -14,42 +14,22 @@ import {
 } from "../ui/dialog.tsx";
 import { EditIcon, Grip, Trash2 } from "lucide-react";
 import EditForm from "../form/edit-form.tsx";
-import { useState } from "react";
-import axios from "axios";
 import toast from "react-hot-toast";
-import { useToken } from "../../hooks/useToken.ts";
+import { DELETE } from "../../src/helpers/__async.ts";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const ProfileOptions = ({ user }: { user: { username: string } }) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
   const username = user.username;
 
-  const { token } = useToken();
   const onDelete = async () => {
-    try {
-      setIsLoading(true);
-      const checkIfYes = confirm(
-        "Are you sure you want to delete your account?",
-      );
-      if (checkIfYes) {
-        await axios.delete(
-          `http://localhost:8080/api/users/${username}/delete`,
-          {
-            headers: {
-              Authorization: "Bearer " + token,
-            },
-          },
-        );
-        toast.success("Account has been deleted!");
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
-      } else {
-        return;
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
+    const ifYes = confirm("Are you sure you want to delete your account?");
+    if (ifYes) {
+      await DELETE(`users/${username}/delete`);
+      toast.success("Account has been deleted!");
+      Cookies.remove("token");
+      navigate("/login");
     }
   };
 
@@ -72,7 +52,6 @@ const ProfileOptions = ({ user }: { user: { username: string } }) => {
           </DialogTrigger>
           <DropdownMenuItem
             className="p-3 mt-1 flex gap-2 items-center hover:bg-error font-semibold text-black dark:text-white cursor-pointer"
-            disabled={isLoading}
             onClick={onDelete}
           >
             <Trash2 size={18} />

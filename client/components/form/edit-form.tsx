@@ -4,14 +4,14 @@ import { Input } from "../ui/input";
 import { FormEvent, useEffect, useState } from "react";
 import { ImageUpload } from "../user-view/image-upload.tsx";
 import { UploadCloudIcon } from "lucide-react";
-import { useCurrentUser } from "../../hooks/useCurrentUser.ts";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { Label } from "../ui/label.tsx";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 function EditForm() {
-  const { currentUser, userId } = useCurrentUser();
+  const { currentUser } = useSelector((state) => state.currentUser);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [description, setDescription] = useState("");
@@ -34,7 +34,7 @@ function EditForm() {
     try {
       setLoading(true);
       await axios.patch(
-        `http://localhost:8080/api/users/${userId}/edit`,
+        `http://localhost:8080/api/users/${currentUser.username}/edit`,
         { name, email, description, coverImage, profileImage },
         {
           headers: {

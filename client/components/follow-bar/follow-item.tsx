@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button.tsx";
 import { UserMinus2, UserPlus2 } from "lucide-react";
-import { useFollow } from "../../hooks/useFollow.ts";
+import { useDispatch, useSelector } from "react-redux";
+import { followUser } from "../../src/store/follow-slice.ts";
+import { FormEvent } from "react";
 
 const FollowItem = ({
   user,
@@ -14,17 +16,22 @@ const FollowItem = ({
   };
 }) => {
   const navigate = useNavigate();
-  const { isFollowing, onFollow } = useFollow(user);
+  const dispatch = useDispatch();
+  const { isLoading } = useSelector((state) => state.follow);
+  const isFollowing = useSelector(
+    (state) => state.follow.usersFollowing[user.username] ?? false,
+  );
 
-  const goToUser = (e: any) => {
+  const goToUser = (e: FormEvent) => {
     e.stopPropagation();
     navigate(`/user/${user?.username}`);
   };
 
-  const followUser = async (e: any) => {
+  const onFollow = async (e: FormEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    await onFollow();
+    const userData = { username: user.username, isFollowing };
+    dispatch(followUser(userData));
   };
 
   return (
@@ -48,7 +55,8 @@ const FollowItem = ({
           className={`${
             isFollowing && "bg-error hover:bg-error hover:opacity-80"
           } p-2 flex ml-auto gap-1 items-center font-semibold border dark:border-black hover:scale-105 transition-all`}
-          onClick={followUser}
+          onClick={onFollow}
+          disabled={isLoading}
         >
           {isFollowing ? (
             <>

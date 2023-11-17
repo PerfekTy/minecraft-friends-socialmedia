@@ -2,7 +2,8 @@ import { Button } from "../ui/button.tsx";
 import { UserMinus2, UserPlus2 } from "lucide-react";
 import ProfileOptions from "./profile-options.tsx";
 import { useEffect, useState } from "react";
-import { useFollow } from "../../hooks/useFollow.ts";
+import { useDispatch, useSelector } from "react-redux";
+import { followUser } from "../../src/store/follow-slice.ts";
 
 interface UserHeroProps {
   userId: string;
@@ -15,8 +16,14 @@ interface UserHeroProps {
 }
 
 const UserHero = ({ userId, user }: UserHeroProps) => {
+  const dispatch = useDispatch();
   const [isCurrentUser, setIsCurrentUser] = useState<boolean | null>(null);
-  const { onFollow, isFollowing } = useFollow(user);
+  const { isLoading, isFollowing } = useSelector((state) => state.follow);
+
+  // TODO: FIX FOLLOWS
+  // const onFollow = () => {
+  //   dispatch(followUser({ username: user.username, isFollowing }));
+  // };
 
   useEffect(() => {
     if (userId === user.username) {
@@ -72,7 +79,8 @@ const UserHero = ({ userId, user }: UserHeroProps) => {
             className={`${
               isFollowing && "bg-error hover:bg-error hover:opacity-80"
             } p-5 w-full flex gap-2 items-center font-semibold border dark:border-black`}
-            onClick={onFollow}
+            onClick={() => dispatch({ username: user.username, isFollowing })}
+            disabled={isLoading}
           >
             {isFollowing ? (
               <>

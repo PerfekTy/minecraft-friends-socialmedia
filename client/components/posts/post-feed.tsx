@@ -1,9 +1,13 @@
 import PostForm from "./post-form.tsx";
 import { usePosts } from "../../hooks/usePosts.ts";
 import PostItem from "./post-item.tsx";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { getPosts } from "../../src/store/posts-slice.ts";
 
 const PostFeed = () => {
-  const { posts = [], isLoading } = usePosts();
+  const dispatch = useDispatch();
+  const { posts, isLoading } = useSelector((state) => state.posts);
 
   const sortedPosts = [...posts].sort((a, b) => {
     return new Date(b.createdAt) - new Date(a.createdAt);
@@ -12,6 +16,10 @@ const PostFeed = () => {
   const postUsernames = sortedPosts.map((post) => {
     return { username: post.username };
   });
+
+  useEffect(() => {
+    dispatch(getPosts());
+  }, [dispatch]);
 
   return (
     <div className="2xl:w-2/3 w-full">
