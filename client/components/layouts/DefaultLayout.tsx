@@ -3,15 +3,15 @@ import { useEffect, useState } from "react";
 
 import NavbarLayout from "../nav/NavbarLayout.tsx";
 import toast from "react-hot-toast";
+import { useToken } from "../../hooks/useToken.ts";
 import FollowBar from "../follow-bar/follow-bar.tsx";
 import jwtDecode from "jwt-decode";
-import Cookies from "js-cookie";
 
 const DefaultLayout = () => {
   const [timeLeft, setTimeLeft] = useState("");
   const navigate = useNavigate();
   const params = useParams();
-  const token = Cookies.get("token");
+  const { token } = useToken();
 
   useEffect(() => {
     if (!token) {

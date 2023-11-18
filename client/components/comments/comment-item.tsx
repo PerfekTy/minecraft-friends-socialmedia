@@ -3,9 +3,9 @@ import { useUser } from "../../hooks/useUser.ts";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Trash2 } from "lucide-react";
+import { useCurrentUser } from "../../hooks/useCurrentUser.ts";
 import { useComments } from "../../hooks/useComments.ts";
-import { useSelector } from "react-redux";
-import { DELETE } from "../../src/helpers/__async.ts";
+import { useToken } from "../../hooks/useToken.ts";
 
 interface CommentItemProps {
   comment: {
@@ -22,8 +22,9 @@ interface CommentItemProps {
 const CommentItem = ({ comment, commentUsernames }: CommentItemProps) => {
   const [userProfileImage, setUserProfileImage] = useState<string[]>([]);
   const { user } = useUser(commentUsernames);
-  const { currentUser } = useSelector((state) => state.currentUser);
+  const { currentUser } = useCurrentUser();
   const { mutateComments } = useComments();
+  const { token } = useToken();
 
   const createdAt = useMemo(() => {
     if (!comment?.createdAt) {
@@ -49,13 +50,22 @@ const CommentItem = ({ comment, commentUsernames }: CommentItemProps) => {
     });
 
     setUserProfileImage(profileImage);
-  }, [comment.username, user]);
+  }, [user]);
 
   const onDelete = async (e: FormEvent) => {
     e.stopPropagation();
-    await DELETE(`comments/${comment.idd}`);
-    toast.success("Comment deleted!");
-    mutateComments();
+    try {
+      await axios.delete(`http://localhost:8080/api/comments/${comment.idd}`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      toast.success("Comment deleted!");
+      mutateComments();
+    } catch (e) {
+      console.log(e);
+      toast.error("Something went wrong");
+    }
   };
 
   return (

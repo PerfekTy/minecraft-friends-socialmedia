@@ -2,11 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 import SignIn from "../authentication/sign-in.tsx";
-import Cookies from "js-cookie";
+import { useToken } from "../../hooks/useToken.ts";
 
 const AuthLayout = () => {
   const navigate = useNavigate();
-  const token = Cookies.get("token");
+  const { token } = useToken();
 
   useEffect(() => {
     if (token) {

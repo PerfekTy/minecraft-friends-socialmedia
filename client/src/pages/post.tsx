@@ -2,19 +2,24 @@ import Servers from "../../components/servers/servers.tsx";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { useToken } from "../../hooks/useToken.ts";
 import PostItem from "../../components/posts/post-item.tsx";
 import PostForm from "../../components/posts/post-form.tsx";
 import CommentFeed from "../../components/comments/comment-feed.tsx";
-import { REQUEST_HEADERS } from "../store/consts.ts";
 
 const Post = () => {
   const params = useParams();
+  const { token } = useToken();
   const { data: post, isLoading } = useQuery({
     queryKey: ["post"],
     queryFn: async () => {
       const { data } = await axios.get(
         `http://localhost:8080/api/posts/${params.postId}`,
-        REQUEST_HEADERS,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        },
       );
 
       return data;

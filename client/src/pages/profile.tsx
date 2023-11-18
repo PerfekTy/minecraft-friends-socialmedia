@@ -1,30 +1,41 @@
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
+import axios from "axios";
+
 import { useNavigate, useParams } from "react-router-dom";
+import { useToken } from "../../hooks/useToken.ts";
+import { useUsers } from "../../hooks/useUsers.ts";
+
 import {
   ArrowDownAZ,
+  ArrowDownWideNarrow,
   Calendar,
+  RefreshCw,
   Trash2,
   UserMinus2,
   UserPlus2,
 } from "lucide-react";
 
+import { useCurrentUser } from "../../hooks/useCurrentUser.ts";
 import UserHero from "../../components/user-view/user-hero.tsx";
 import { Button } from "../../components/ui/button.tsx";
 import EditModal from "../../components/modals/edit-modal.tsx";
+import { useFollow } from "../../hooks/useFollow.ts";
 import FollowDropdown from "../../components/user-view/follow-dropdown.tsx";
 import FollowDropdownContent from "../../components/user-view/follow-dropdown-content.tsx";
 import FollowDropdownTrigger from "../../components/user-view/follow-dropdown-trigger.tsx";
+import { usePosts } from "../../hooks/usePosts.ts";
 import PostItem from "../../components/posts/post-item.tsx";
-import { useDispatch, useSelector } from "react-redux";
-import { DELETE } from "../helpers/__async.ts";
-import Cookies from "js-cookie";
-import { followUser } from "../store/follow-slice.ts";
 
 const Profile = () => {
-  const navigate = useNavigate();
   const params = useParams();
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { currentUser, userId } = useCurrentUser();
+  const { users = [] } = useUsers();
+  const { token } = useToken();
+  const { posts = [], mutatePosts } = usePosts();
+
   const [user, setUser] = useState({
     id: {
       date: "",
@@ -35,14 +46,11 @@ const Profile = () => {
     followers: [],
     ownFollowers: [],
   });
-  const { currentUser } = useSelector((state) => state.currentUser);
-  const { users } = useSelector((state) => state.users);
-  const { posts } = useSelector((state) => state.posts);
-
   const [isCurrentUser, setIsCurrentUser] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [profilePosts, setProfilePosts] = useState([]);
 
-  const { isFollowing, isLoading } = useSelector((state) => state.follow);
+  const { isFollowing, onFollow, isLoading: followLoading } = useFollow(user);
 
   const createdAt = useMemo(() => {
     if (!user?.id?.date) {
@@ -58,20 +66,32 @@ const Profile = () => {
   }, [user?.id?.date]);
 
   const onDelete = async () => {
-    const ifYes = confirm("Are you sure you want to delete your account?");
-    if (ifYes) {
-      await DELETE(`users/${currentUser.username}/delete`);
+    try {
+      setIsLoading(true);
+      const checkIfYes = confirm(
+        "Are you sure you want to delete your account?",
+      );
+      if (checkIfYes) {
+        await axios.delete(
+          `http://localhost:8080/api/users/${currentUser?.username}/delete`,
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          },
+        );
+        toast.success("Account has been deleted!");
+        navigate("/login");
+      } else {
+        return;
+      }
+    } catch (error) {
+      console.log(error);
       toast.success("Account has been deleted!");
-      Cookies.remove("token");
-      navigate("/login");
+    } finally {
+      setIsLoading(false);
     }
   };
-
-  // TODO: FIX FOLLOWS
-  // const onFollow = () => {
-  //   const userData = { username: user.username, isFollowing };
-  //   dispatch(followUser(userData));
-  // };
 
   useEffect(() => {
     const filteredUser = users?.find(
@@ -79,7 +99,7 @@ const Profile = () => {
     );
     if (filteredUser) {
       setUser(filteredUser);
-      setIsCurrentUser(currentUser.username === filteredUser.username);
+      setIsCurrentUser(userId === filteredUser.username);
     }
 
     const filteredPosts = posts?.filter(
@@ -97,16 +117,16 @@ const Profile = () => {
   }, [
     users,
     posts,
+    userId,
     params.userId,
     setUser,
     setIsCurrentUser,
     setProfilePosts,
-    currentUser.username,
   ]);
 
   return (
     <div className="mx-auto dark:bg-navbar bg-navbarLight bg-opacity-50 p-10 w-full md:w-fit">
-      <UserHero userId={currentUser.username} user={user} />
+      <UserHero userId={userId} user={user} />
       <span className="text-sm flex flex-col md:ml-52 mx-auto text-black dark:text-white mt-5 md:w-1/2">
         <p className="text-[35px] font-bold text-center md:text-left leading-10">
           {user?.name}
@@ -166,7 +186,7 @@ const Profile = () => {
                   isFollowing && "bg-error hover:bg-error hover:opacity-80"
                 } p-5 w-full flex gap-2 items-center font-semibold border dark:border-black`}
                 onClick={onFollow}
-                disabled={isLoading}
+                disabled={followLoading}
               >
                 {isFollowing ? (
                   <>
@@ -186,6 +206,7 @@ const Profile = () => {
                 <Button
                   variant="ghost"
                   className="p-5 flex gap-2 items-center font-semibold border hover:bg-error text-black border-black dark:text-white dark:border-white"
+                  disabled={isLoading}
                   onClick={onDelete}
                 >
                   <Trash2 />

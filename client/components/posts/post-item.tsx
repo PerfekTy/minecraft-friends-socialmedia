@@ -2,9 +2,11 @@ import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useUser } from "../../hooks/useUser.ts";
 import { Trash2 } from "lucide-react";
+import { useCurrentUser } from "../../hooks/useCurrentUser.ts";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
-import { DELETE } from "../../src/helpers/__async.ts";
+import axios from "axios";
+import { usePosts } from "../../hooks/usePosts.ts";
+import { useToken } from "../../hooks/useToken.ts";
 
 interface PostItemProps {
   post: {
@@ -22,7 +24,9 @@ const PostItem = ({ post, postUsernames }: PostItemProps) => {
   const navigate = useNavigate();
   const [userProfileImage, setUserProfileImage] = useState<string[]>([]);
   const { user } = useUser(postUsernames);
-  const { currentUser } = useSelector((state) => state.currentUser);
+  const { currentUser } = useCurrentUser();
+  const { mutatePosts } = usePosts();
+  const { token } = useToken();
 
   const createdAt = useMemo(() => {
     if (!post?.createdAt) {
@@ -60,16 +64,22 @@ const PostItem = ({ post, postUsernames }: PostItemProps) => {
     });
 
     setUserProfileImage(profileImage);
-  }, [post?.username, user]);
+  }, [user]);
 
   const onDelete = async (e: FormEvent) => {
     e.stopPropagation();
-    await DELETE(`posts/${post.idd}`);
-    toast.success("Post deleted!");
-    if (params.postId) {
-      navigate("/");
+    try {
+      await axios.delete(`http://localhost:8080/api/posts/${post.idd}`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      toast.success("Post deleted!");
+      mutatePosts();
+    } catch (e) {
+      console.log(e);
+      toast.error("Something went wrong");
     }
-    // mutatePosts();
   };
 
   return (
