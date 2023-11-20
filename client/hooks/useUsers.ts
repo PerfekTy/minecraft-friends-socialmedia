@@ -14,5 +14,6 @@ export const useUsers = () => {
       return data;
     },
   });
+
   return { users, isLoading, isError, error };
 };

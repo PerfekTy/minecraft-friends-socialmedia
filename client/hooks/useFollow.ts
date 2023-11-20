@@ -51,9 +51,7 @@ export const useFollow = (user: {
 
   const { mutate: mutateFollow } = useMutation({
     onSettled: () => {
-      // @ts-ignore
       queryClient.invalidateQueries(["user"], user);
-      // @ts-ignore
       queryClient.invalidateQueries(["isFollowing"], isFollowing);
     },
   });

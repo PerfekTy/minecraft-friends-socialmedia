@@ -40,7 +40,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       const file = files[0];
       try {
         new Compressor(file, {
-          quality: 0.6,
+          quality: 0.3,
           success: async (result) => {
             const reader = new FileReader();
 

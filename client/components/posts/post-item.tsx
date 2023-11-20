@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { usePosts } from "../../hooks/usePosts.ts";
 import { useToken } from "../../hooks/useToken.ts";
+import {Button} from "../ui/button.tsx";
 
 interface PostItemProps {
   post: {
@@ -27,6 +28,7 @@ const PostItem = ({ post, postUsernames }: PostItemProps) => {
   const { currentUser } = useCurrentUser();
   const { mutatePosts } = usePosts();
   const { token } = useToken();
+  const [isLoading, setIsLoading] = useState(false)
 
   const createdAt = useMemo(() => {
     if (!post?.createdAt) {
@@ -51,6 +53,33 @@ const PostItem = ({ post, postUsernames }: PostItemProps) => {
     return navigate(`post/${post?.username}/${post?.idd}`);
   }, [navigate, post.idd, post.username, params.postId]);
 
+  const onDelete = async (e: FormEvent) => {
+    e.stopPropagation();
+    try {
+      setIsLoading(true)
+      await axios.delete(`http://localhost:8080/api/posts/${post.idd}`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      toast.success("Post deleted!");
+      mutatePosts();
+      if (params.postId) {
+        navigate("/")
+      }
+      if (params.userId) {
+        setTimeout(()=> {
+          window.location.reload()
+        }, 200)
+      }
+    } catch (e) {
+      console.log(e);
+      toast.error("Something went wrong");
+    } finally {
+      setIsLoading(false)
+    }
+  };
+
   useEffect(() => {
     if (!user) {
       return setUserProfileImage([]);
@@ -64,23 +93,8 @@ const PostItem = ({ post, postUsernames }: PostItemProps) => {
     });
 
     setUserProfileImage(profileImage);
-  }, [user]);
 
-  const onDelete = async (e: FormEvent) => {
-    e.stopPropagation();
-    try {
-      await axios.delete(`http://localhost:8080/api/posts/${post.idd}`, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      });
-      toast.success("Post deleted!");
-      mutatePosts();
-    } catch (e) {
-      console.log(e);
-      toast.error("Something went wrong");
-    }
-  };
+  }, [post?.username, user, post]);
 
   return (
     <div
@@ -102,12 +116,14 @@ const PostItem = ({ post, postUsernames }: PostItemProps) => {
           <p className="font-light">{createdAt}</p>
         </span>
         {post?.username === currentUser?.username && (
-          <div
+          <Button
             className="absolute right-2 top-2 md:right-5 md:top-5 cursor-pointer transition-all hover:scale-110 hover:text-error border-[#ccc] dark:border-[#555] border p-2 rounded-xl hover:bg-error hover:bg-opacity-20"
             onClick={onDelete}
+            variant="ghost"
+            disabled={isLoading}
           >
             <Trash2 size={20} />
-          </div>
+          </Button>
         )}
       </div>
       <div className="p-5 flex flex-col gap-2">

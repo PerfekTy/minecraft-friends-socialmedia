@@ -27,6 +27,7 @@ const FollowItem = ({
     await onFollow();
   };
 
+
   return (
     <div
       className="dark:text-white bg-transparent p-4 h-fit dark:hover:bg-[#252525] hover:bg-[#d5d5d5] rounded-lg transition-all cursor-pointer"

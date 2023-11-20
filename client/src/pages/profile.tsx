@@ -7,6 +7,7 @@ import { useToken } from "../../hooks/useToken.ts";
 import { useUsers } from "../../hooks/useUsers.ts";
 
 import {
+  ArrowBigDownDash,
   ArrowDownAZ,
   ArrowDownWideNarrow,
   Calendar,
@@ -81,7 +82,9 @@ const Profile = () => {
           },
         );
         toast.success("Account has been deleted!");
-        navigate("/login");
+        setTimeout(()=> {
+          navigate("/");
+        }, 500)
       } else {
         return;
       }
@@ -114,15 +117,8 @@ const Profile = () => {
         return [...prevPosts, ...uniquePosts];
       });
     }
-  }, [
-    users,
-    posts,
-    userId,
-    params.userId,
-    setUser,
-    setIsCurrentUser,
-    setProfilePosts,
-  ]);
+
+  }, [users, posts, userId, params.userId, setUser, setIsCurrentUser, setProfilePosts]);
 
   return (
     <div className="mx-auto dark:bg-navbar bg-navbarLight bg-opacity-50 p-10 w-full md:w-fit">
@@ -221,7 +217,7 @@ const Profile = () => {
         <div className="flex flex-col justify-center gap-5 mt-10">
           <hr className="border dark:border-[#555] border-[#ccc]" />
           <div className="flex tracking-widest justify-center gap-2 items-center">
-            <p> Your posts</p> <ArrowDownAZ size={20} />
+            <p> Your posts</p> <ArrowBigDownDash size={20} />
           </div>
           <hr className="border dark:border-[#555] border-[#ccc]" />
         </div>
