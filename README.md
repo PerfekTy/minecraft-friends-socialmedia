@@ -2,8 +2,6 @@
 
 This project is my version of social-media app created by former minecraft player for other players and I did it to pass my classes in university. Final grade is A if you are wondering. 
 
-whole project => https://github.com/PerfekTy/paw-project-v2
-
 ## USER CAN: 
 - Authenticate
 - Create account
