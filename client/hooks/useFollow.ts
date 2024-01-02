@@ -56,5 +56,5 @@ export const useFollow = (user: {
     },
   });
 
-  return { isFollowing, onFollow, isLoading };
+  return { isFollowing, onFollow, isLoading, mutateFollow };
 };

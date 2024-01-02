@@ -109,7 +109,11 @@ const PostItem = ({ post, postUsernames }: PostItemProps) => {
         <img
           src={userProfileImage[0]?.profileImage || "/images/placeholder.jpg"}
           alt=""
-          className="w-10 aspect-square object-cover rounded-full hover:opacity-90"
+          className="w-10 aspect-square object-cover rounded-full cursor-pointer hover:scale-110 transition-all"
+          onClick={(e)=> {
+            e.stopPropagation()
+            navigate(`/user/${post.username}`)
+          }}
         />
         <span className="flex gap-2 items-center text-sm">
           <p className="font-semibold">@{post?.username}</p>

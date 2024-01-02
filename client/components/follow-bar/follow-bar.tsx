@@ -12,10 +12,10 @@ const FollowBar = () => {
 
   useEffect(() => {
     const filteredUsers= users?.filter(
-       (user: Record<string, any>) => user?.username !== userId,
+       (user: Record<string, never>) => user?.username !== userId,
     );
     setFilteredUsers(filteredUsers)
-  }, []);
+  }, [userId, users]);
 
   return (
     <div className="rounded-lg p-2 dark:bg-navbar bg-navbarLight min-w-[350px] max:w-1/3 h-fit m-2 mr-5 hidden xl:block dark:border-none border border-black border-opacity-20">

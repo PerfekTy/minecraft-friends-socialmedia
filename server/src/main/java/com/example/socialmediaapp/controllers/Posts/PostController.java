@@ -5,6 +5,8 @@ import com.example.socialmediaapp.models.Post;
 import com.example.socialmediaapp.repositories.CommentRepository;
 import com.example.socialmediaapp.repositories.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,9 +30,8 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> posts() {
-        List posts = postRepository.findAll();
-        return ResponseEntity.ok(posts);
+    public Page<Post> getPosts(Pageable pageable) {
+        return postRepository.findAll(pageable);
     }
 
     @GetMapping("/{postId}")

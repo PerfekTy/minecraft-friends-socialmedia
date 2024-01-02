@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {usePosts} from "../../hooks/usePosts.ts";
 
 interface FollowDropdownContentProps {
   currentUser: any;
@@ -47,7 +48,11 @@ const FollowDropdownContent = ({
       {followers.username && (
         <div
           className="flex items-center gap-3 w-full p-3 hover:bg-[#ddd] rounded-md cursor-pointer select-none"
-          onClick={() => navigate(`/user/${followers.username}`)}
+          onClick={() => {
+            navigate(`/user/${followers.username}`)
+            window.location.reload()
+          }
+          }
         >
           <div>
             <img
@@ -62,7 +67,7 @@ const FollowDropdownContent = ({
           </div>
           <span>
             <p>{followers.name}</p>
-            <p className="text-sm">@{followers.username}</p>
+            <p className="text-sm text-left">@{followers.username}</p>
           </span>
         </div>
       )}

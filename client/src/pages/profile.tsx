@@ -98,27 +98,31 @@ const Profile = () => {
 
   useEffect(() => {
     const filteredUser = users?.find(
-      (user: Record<string, any>) => user?.username === params.userId,
+      (user: Record<string, never>) => user?.username === params.userId,
     );
     if (filteredUser) {
       setUser(filteredUser);
       setIsCurrentUser(userId === filteredUser.username);
     }
+  }, [users, userId, params.userId]);
 
+  useEffect(() => {
     const filteredPosts = posts?.filter(
-      (post: Record<string, any>) => post?.username === params.userId,
+       (post: Record<string, any>) => post?.username === params.userId,
     );
     if (filteredPosts) {
       setProfilePosts((prevPosts) => {
         const uniquePosts = filteredPosts.filter(
-          (newPost) =>
-            !prevPosts.some((prevPost) => prevPost.id === newPost.id),
+           (newPost) =>
+              !prevPosts.some((prevPost) => prevPost.id === newPost.id),
         );
         return [...prevPosts, ...uniquePosts];
       });
-    }
 
-  }, [users, posts, userId, params.userId, setUser, setIsCurrentUser, setProfilePosts]);
+    }
+  }, [params.userId, posts]);
+
+  console.log(profilePosts.length)
 
   return (
     <div className="mx-auto dark:bg-navbar bg-navbarLight bg-opacity-50 p-10 w-full md:w-fit">
@@ -213,16 +217,24 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      <div className="dark:text-white">
+      {profilePosts.length ?  <div className="dark:text-white">
         <div className="flex flex-col justify-center gap-5 mt-10">
           <hr className="border dark:border-[#555] border-[#ccc]" />
           <div className="flex tracking-widest justify-center gap-2 items-center">
-            <p> Your posts</p> <ArrowBigDownDash size={20} />
+            <p>Your posts</p> <ArrowBigDownDash size={20} />
           </div>
           <hr className="border dark:border-[#555] border-[#ccc]" />
         </div>
         {profilePosts?.map((post) => <PostItem key={post?.idd} post={post} />)}
-      </div>
+      </div> :
+         <div className="flex flex-col justify-center gap-5 mt-10 dark:text-white">
+           <hr className="border dark:border-[#555] border-[#ccc]" />
+           <div className="flex tracking-widest justify-center gap-2 items-center">
+             <p>You have no posts</p> <ArrowBigDownDash size={20} />
+           </div>
+           <hr className="border dark:border-[#555] border-[#ccc]" />
+         </div>
+      }
     </div>
   );
 };

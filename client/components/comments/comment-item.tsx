@@ -6,6 +6,7 @@ import { Trash2 } from "lucide-react";
 import { useCurrentUser } from "../../hooks/useCurrentUser.ts";
 import { useComments } from "../../hooks/useComments.ts";
 import { useToken } from "../../hooks/useToken.ts";
+import {useNavigate} from "react-router-dom";
 
 interface CommentItemProps {
   comment: {
@@ -21,6 +22,7 @@ interface CommentItemProps {
 
 const CommentItem = ({ comment, commentUsernames }: CommentItemProps) => {
   const [userProfileImage, setUserProfileImage] = useState<string[]>([]);
+  const navigate = useNavigate()
   const { user } = useUser(commentUsernames);
   const { currentUser } = useCurrentUser();
   const { mutateComments } = useComments();
@@ -50,7 +52,7 @@ const CommentItem = ({ comment, commentUsernames }: CommentItemProps) => {
     });
 
     setUserProfileImage(profileImage);
-  }, [user]);
+  }, [comment.username, user]);
 
   const onDelete = async (e: FormEvent) => {
     e.stopPropagation();
@@ -78,7 +80,11 @@ const CommentItem = ({ comment, commentUsernames }: CommentItemProps) => {
         <img
           src={userProfileImage[0]?.profileImage || "/images/placeholder.jpg"}
           alt=""
-          className="w-10 aspect-square object-cover rounded-full hover:opacity-90"
+          className="w-10 aspect-square object-cover rounded-full hover:opacity-90 cursor-pointer"
+          onClick={e => {
+            e.stopPropagation()
+            navigate(`/user/${comment.username}`)
+          }}
         />
         <span className="flex gap-2 items-center text-sm">
           <p className="font-semibold">@{comment?.username}</p>

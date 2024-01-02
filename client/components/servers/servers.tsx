@@ -13,7 +13,7 @@ const Servers = () => {
     if (location.pathname === "/servers") {
       return setIsServers(true);
     }
-  }, []);
+  }, [location.pathname]);
 
   if (isError) {
     return <p>Error occurred</p>;
@@ -22,14 +22,14 @@ const Servers = () => {
     <div
       className={`${
         isServers
-          ? "bg-navbarLight dark:bg-navbar md:my-2 mt-20 md:ml-[250px] md:mr-4 w-full rounded-lg grid grid-cols-1 mx-2 xl:grid-cols-2 2xl:grid-cols-3 dark:text-white"
+          ? "bg-navbarLight dark:bg-navbar md:my-2 mt-20 md:ml-[250px] md:mr-4 w-full rounded-lg grid grid-cols-1 mx-2 xl:grid-cols-2 2xl:grid-cols-3 dark:text-white "
           : "2xl:block hidden w-1/3 border-l dark:border-[#222] border-[#ccc] ml-auto"
       }`}
     >
       <span
         className={`${
           isServers
-            ? "col-span-full flex justify-center items-center gap-3 text-xl uppercase tracking-wide font-light border-b dark:border-[#222] border-[#ccc]"
+            ? "col-span-3 flex justify-center items-center gap-3 text-xl uppercase tracking-wide font-light border-b dark:border-[#222] border-[#ccc]"
             : "flex justify-center items-center gap-3 text-xl uppercase tracking-wide font-light border-b dark:border-[#222] border-[#ccc]"
         }`}
       >

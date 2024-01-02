@@ -16,7 +16,7 @@ interface UserHeroProps {
 
 const UserHero = ({ userId, user }: UserHeroProps) => {
   const [isCurrentUser, setIsCurrentUser] = useState<boolean | null>(null);
-  const { onFollow, isFollowing } = useFollow(user);
+  const { onFollow, isFollowing, isLoading } = useFollow(user);
 
   useEffect(() => {
     if (userId === user.username) {
@@ -51,6 +51,7 @@ const UserHero = ({ userId, user }: UserHeroProps) => {
               isFollowing && "bg-error hover:bg-error hover:opacity-80"
             } p-3 md:p-5 flex gap-2 items-center font-semibold`}
             onClick={onFollow}
+            disabled={isLoading}
           >
             {isFollowing ? (
               <>
@@ -73,6 +74,7 @@ const UserHero = ({ userId, user }: UserHeroProps) => {
               isFollowing && "bg-error hover:bg-error hover:opacity-80"
             } p-5 w-full flex gap-2 items-center font-semibold border dark:border-black`}
             onClick={onFollow}
+            disabled={isLoading}
           >
             {isFollowing ? (
               <>
